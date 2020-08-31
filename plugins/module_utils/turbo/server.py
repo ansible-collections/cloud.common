@@ -103,11 +103,7 @@ class EmbeddedModule:
                     except AttributeError:
                         # Not from a zipimporter loader, skipping
                         continue
-                    py_path = (
-                        self.ansiblez_path
-                        + os.sep
-                        + sys.modules[path].__loader__.prefix
-                    )
+                    py_path = self.ansiblez_path + os.sep + prefix
                     my_loader = zipimporter(py_path)
                     sys.meta_path.append(my_loader)
                     if hasattr(sys.modules[path], "__path__"):
@@ -178,7 +174,10 @@ class AnsibleVMwareTurboMode:
         if not raw_data:
             return
 
-        (ansiblez_path, params,) = json.loads(raw_data)
+        (
+            ansiblez_path,
+            params,
+        ) = json.loads(raw_data)
 
         embedded_module = EmbeddedModule(ansiblez_path, params)
 
