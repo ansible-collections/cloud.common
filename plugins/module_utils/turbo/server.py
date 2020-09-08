@@ -13,7 +13,11 @@ import zipfile
 from zipimport import zipimporter
 
 
-from .exceptions import EmbeddedModuleFailure, EmbeddedModuleSuccess
+from .exceptions import (
+    EmbeddedModuleFailure,
+    EmbeddedModuleUnexpectedFailure,
+    EmbeddedModuleSuccess,
+)
 
 sys_path_lock = asyncio.Lock()
 
@@ -147,14 +151,8 @@ class EmbeddedModule:
             print("EmbeddedModuleSuccess!")
             return e.kwargs
         except Exception as e:
-            for l in traceback.format_stack():
-                print(l)
-            print("Exception!!!!: %s" % e)
-            raise
-
-
-#        except Exception as e:
-#            raise EmbeddedModuleFailure(e)
+            backtrace = traceback.format_exc()
+            raise EmbeddedModuleUnexpectedFailure(backtrace)
 
 
 class AnsibleVMwareTurboMode:
@@ -184,6 +182,8 @@ class AnsibleVMwareTurboMode:
         await embedded_module.load()
         try:
             result = await embedded_module.run()
+        except EmbeddedModuleFailure as e:
+            result = {"msg": str(e), "failed": True}
         except Exception as e:
             result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
 
