@@ -60,7 +60,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             try:
                 self._socket.connect(self._socket_path)
                 return
-            except (ConnectionRefusedError, FileNotFoundError) as e:
+            except (ConnectionRefusedError, FileNotFoundError):
                 self.start_daemon()
                 if attempt == 0:
                     raise
