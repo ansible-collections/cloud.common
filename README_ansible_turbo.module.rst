@@ -106,3 +106,18 @@ It runs in one single process and uses ``asyncio`` internally.
 Consequently you can use the ``sync`` keyword in your Ansible module.
 This will be handy if you interact with a lot of remote systems
 at the same time.
+
+Error managment
+===============
+
+``ansible_module.turbo`` uses exception to communicate a result back to the module.
+
+- ``EmbeddedModuleFailure`` is raised when ``json_fail()`` is called.
+- ``EmbeddedModuleSuccess`` is raised in case of success and return the result to the origin module processthe origin.
+
+Thse exceptions are defined in ``ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions``.
+You can raise ``EmbeddedModuleFailure`` exception yourself, for instance from a module in ``module_utils``.
+
+.. note:: Be careful with the ``except Exception:`` blocks
+    In addition to a bad practice, they may interface with this
+    mechanizm.
