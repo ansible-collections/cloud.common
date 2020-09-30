@@ -70,9 +70,10 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         self.connect()
         result = dict(changed=False, original_message="", message="")
         ansiblez_path = sys.path[0]
+        args = {"ANSIBLE_MODULE_ARGS": {k: v for k, v in self.params.items() if v}}
         data = [
             ansiblez_path,
-            ansible.module_utils.basic._ANSIBLE_ARGS.decode(),
+            json.dumps(args),
         ]
         self._socket.send(json.dumps(data).encode())
         raw_answer = b""
