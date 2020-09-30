@@ -143,13 +143,13 @@ class EmbeddedModule:
             raise EmbeddedModuleFailure("No main() found!")
         try:
             if inspect.iscoroutinefunction(self.module_class.main):
-                print("Co routine!")
                 await self.module_class.main()
             else:
                 self.module_class.main()
         except EmbeddedModuleSuccess as e:
-            print("EmbeddedModuleSuccess!")
             return e.kwargs
+        except EmbeddedModuleFailure:
+            raise
         except Exception as e:
             backtrace = traceback.format_exc()
             raise EmbeddedModuleUnexpectedFailure(backtrace)

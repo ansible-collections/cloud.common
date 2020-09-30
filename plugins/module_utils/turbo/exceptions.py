@@ -1,14 +1,14 @@
 class EmbeddedModuleFailure(Exception):
-    def __init__(self, message):
-        self._message = message
+    def __init__(self, msg):
+        self._message = msg
 
     def get_message(self):
         return repr(self._message)
 
 
 class EmbeddedModuleUnexpectedFailure(Exception):
-    def __init__(self, message):
-        self._message = message
+    def __init__(self, msg):
+        self._message = msg
 
     def get_message(self):
         return repr(self._message)
