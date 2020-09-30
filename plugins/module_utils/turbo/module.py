@@ -21,7 +21,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._socket = None
-        self._socket_path = os.environ["HOME"] + "/.ansible/turbo_mode.socket"
+        self._socket_path = os.environ["HOME"] + "/.ansible/tmp/turbo_mode.socket"
         self._running = None
         self.embedded_in_server = sys.argv[0].endswith("/server.py")
         if not self.embedded_in_server:
