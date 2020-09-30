@@ -93,9 +93,9 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             self.do_cleanup_files()
             raise EmbeddedModuleSuccess(**kwargs)
 
-    def fail_json(self, **kwargs):
+    def fail_json(self, *args, **kwargs):
         if not self.embedded_in_server:
             super().fail_json(**kwargs)
         else:
             self.do_cleanup_files()
-            raise EmbeddedModuleFailure(**kwargs)
+            raise EmbeddedModuleFailure(*args, **kwargs)
