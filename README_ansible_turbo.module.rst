@@ -71,6 +71,8 @@ Finally, if some of the libraries you depend on are large, it may be nice
 to defer your module imports, and do the loading AFTER the
 ``AnsibleTurboModule`` instance creation.
 
+.. note:: This module depends on Python 3.6 or greater
+
 Example
 =======
 
