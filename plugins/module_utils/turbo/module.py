@@ -7,7 +7,7 @@ import time
 import ansible.module_utils.basic
 from .exceptions import EmbeddedModuleSuccess, EmbeddedModuleFailure
 
-if False:
+if False:  # pylint: disable=using-constant-test
     from .server import please_include_me
 
     # This is a trick to be sure server.py is embedded in the Ansiblez
