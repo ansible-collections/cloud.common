@@ -1,10 +1,14 @@
 import argparse
 import asyncio
 import importlib
-import inspect
+
+# py38 only, See: https://github.com/PyCQA/pylint/issues/2976
+import inspect  # pylint: disable=syntax-error
 import io
 import json
-import collections
+
+# py38 only, See: https://github.com/PyCQA/pylint/issues/2976
+import collections  # pylint: disable=syntax-error
 import os
 import signal
 import sys
