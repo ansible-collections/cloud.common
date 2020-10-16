@@ -1,15 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright 2020 Gonéri Le Bouder <goneri@lebouder.net>
+# Copyright: (C) 2020, Gonéri Le Bouder <goneri@lebouder.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["preview"],
-    "supported_by": "community",
-}
 
-DOCUMENTATION = """
+DOCUMENTATION = r"""
 ---
 module: turbo_demo
 short_description: A demo module for ansible_module.turbo
@@ -20,7 +15,7 @@ author:
 - Gonéri Le Bouder (@goneri)
 """
 
-EXAMPLES = """
+EXAMPLES = r"""
 - name: Run the module
   turbo_demo:
 """
