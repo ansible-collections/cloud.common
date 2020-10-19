@@ -111,6 +111,24 @@ Consequently you can use the ``sync`` keyword in your Ansible module.
 This will be handy if you interact with a lot of remote systems
 at the same time.
 
+Security impact
+===============
+
+``ansible_module.turbo`` open an Unix socket to interact with the background service.
+We use this service to open the connection toward the different target systems.
+
+This is similar to what SSH does with the sockets.
+
+Keep in mind that:
+
+- All the modules can access the same cache. Soon an isolation will be done at the collection level (https://github.com/ansible-collections/cloud.common/pull/17)
+- A task can loaded a different version of a library and impact the next tasks.
+- If the same user runs two ``ansible-playbook`` at the same time, they will have access to the same cache.
+
+When a module stores a session in a cache, it's a good idea to use a hash of the authentication information to identify the session.
+
+.. note:: You may want to isolate your Ansible environemt in a container, in this case you can consider https://github.com/ansible/ansible-builder
+
 Error management
 ================
 
