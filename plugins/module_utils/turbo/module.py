@@ -28,14 +28,14 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             self.run_on_daemon()
 
     def start_daemon(self):
-        import subprocess
-
         if self._running:
             return
 
         ansiblez_path = sys.path[0]
         env = os.environ
         env.update({"PYTHONPATH": ansiblez_path})
+        import subprocess
+
         p = subprocess.Popen(
             [
                 sys.executable,
@@ -49,8 +49,6 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             close_fds=True,
         )
         self._running = True
-        # p.pid
-        # p.returncode
         p.communicate()
         return
 

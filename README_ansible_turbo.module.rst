@@ -10,33 +10,33 @@ Current situation
 The traditional execution flow of an Ansible module includes
 the following steps:
 
-- upload of a zip archive with the module and its dependencies
-- execution of the module, which is just a Python script
+- Upload of a zip archive with the module and its dependencies
+- Execution of the module, which is just a Python script
 - Ansible collects the results once the script is finished
 
 These steps happen for each task of a playbook, and on every host.
 
 Most of the time, the execution of a module is fast enough for
-the user. However sometime, the module requires an important
+the user. However, sometime the module requires an important
 amount of time, just to initialize itself. This is a common
 situation with the API based modules. A classic initialization
 involves the following steps:
 
-- load a python library to access the remote resource (SDK)
-- open a client
-    - load a bunch of Python modules.
-    - request a new TCP connection.
-    - create a session.
-    - and finally, authenticate the client.
+- Load a Python library to access the remote resource (via SDK)
+- Open a client
+    - Load a bunch of Python modules.
+    - Request a new TCP connection.
+    - Create a session.
+    - Authenticate the client.
 
-All these steps can be time consuming and the same operations
-will be run again and again.
+All these steps are time consuming and the same operations
+will be running again and again.
 
 For instance, here:
 
 - ``import openstack``: tasks 0.569s
-- ``client = openstack.connect()```: 0.065s
-- ``client.authorize()```: 1.360s, I run my test against VexxHost public cloud.
+- ``client = openstack.connect()``: 0.065s
+- ``client.authorize()``: 1.360s, I run my test against VexxHost public cloud.
 
 In this case, it's a 2s-ish overhead per task. If the playbook
 comes with 10 tasks, the execution time cannot go below 20s.
@@ -55,10 +55,12 @@ All the module logic is run inside this Python daemon. This means:
 - Python modules are actually loaded one time
 - Ansible module can reuse an existing authenticated session.
 
-I'm a collection maintainer, How can I enable ```AnsibleTurboModule``?
-======================================================================
+How can I enable ```AnsibleTurboModule``?
+=========================================
 
-Your module should inherite from ``AnsibleTurboModule``, instead of ``AnsibleModule``.
+If you are a collection maintainer and want to enable ``AnsibleTurboModule``, you can
+follow these steps.
+Your module should inherit from ``AnsibleTurboModule``, instead of ``AnsibleModule``.
 
 .. code-block:: python
 
@@ -67,19 +69,19 @@ Your module should inherite from ``AnsibleTurboModule``, instead of ``AnsibleMod
 You can also use the ``functools.lru_cache()`` decorator to ask Python to cache
 the result of an operation, like a network session creation.
 
-Finally, if some of the libraries you depend on are large, it may be nice
+Finally, if some of the dependeded libraries are large, it may be nice
 to defer your module imports, and do the loading AFTER the
 ``AnsibleTurboModule`` instance creation.
 
-.. note:: This module depends on Python 3.6 or greater
+.. note:: AnsibleTurboModule depends on Python 3.6 or greater
 
 Example
 =======
 
-The Ansible module has to be slightly different. Here an example
-with OpenStack and VMware.
+The Ansible module is slightly different while using AnsibleTurboModule.
+Here are some examples with OpenStack and VMware.
 
-This examples use ``functools.lru_cache`` that is the Python core since 3.3.
+These examples use ``functools.lru_cache`` that is the Python core since 3.3.
 ``lru_cache()`` decorator will managed the cache. It uses the function parameters
 as unicity criteria.
 
@@ -90,7 +92,7 @@ Demo
 ====
 
 In this demo, we run one playbook that do several ``os_keypair``
-calls. The first time, we run the regular Ansible module.
+calls. For the first time, we run the regular Ansible module.
 The second time, we run the same playbook, but with the modified
 version.
 
@@ -102,15 +104,15 @@ version.
 The daemon
 ==========
 
-The daemon will kill itself after 15s, and communication are done
+The daemon kills itself after 15s, and communication are done
 through an Unix socket.
 It runs in one single process and uses ``asyncio`` internally.
 Consequently you can use the ``sync`` keyword in your Ansible module.
 This will be handy if you interact with a lot of remote systems
 at the same time.
 
-Error managment
-===============
+Error management
+================
 
 ``ansible_module.turbo`` uses exception to communicate a result back to the module.
 
@@ -120,6 +122,6 @@ Error managment
 Thse exceptions are defined in ``ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions``.
 You can raise ``EmbeddedModuleFailure`` exception yourself, for instance from a module in ``module_utils``.
 
-.. note:: Be careful with the ``except Exception:`` blocks
-    In addition to a bad practice, they may interface with this
-    mechanizm.
+.. note:: Be careful with the ``except Exception:`` blocks.
+    Not only they are bad practice, but also may interface with this
+    mechanism.

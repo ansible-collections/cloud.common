@@ -102,7 +102,7 @@ class EmbeddedModule:
             # Add the Ansiblez_path in sys.path
             sys.path.insert(0, self.ansiblez_path)
 
-            # resettle the loaded modules that were associted
+            # resettle the loaded modules that were associated
             # with a different Ansiblez.
             for path, module in tuple(sys.modules.items()):
                 if path and module and path.startswith("ansible_collections"):
@@ -135,7 +135,7 @@ class EmbeddedModule:
 
         # monkeypatching to pass the argument to the module, this is not
         # really safe, and in the future, this will prevent us to run several
-        # modules in paralle. We can maybe use a scoped monkeypatch instead
+        # modules in parallel. We can maybe use a scoped monkeypatch instead
         _fake_stdin = FakeStdin()
         _fake_stdin.buffer = io.BytesIO(self.params.encode())
         sys.stdin = _fake_stdin
