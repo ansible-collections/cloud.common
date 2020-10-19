@@ -101,8 +101,8 @@ version.
 
     <a href="https://asciinema.org/a/329481?autoplay=1" target="_blank"><img src="https://asciinema.org/a/329481.png" width="835"/></a>
 
-The daemon
-==========
+The background service
+======================
 
 The daemon kills itself after 15s, and communication are done
 through an Unix socket.
@@ -125,3 +125,15 @@ You can raise ``EmbeddedModuleFailure`` exception yourself, for instance from a 
 .. note:: Be careful with the ``except Exception:`` blocks.
     Not only they are bad practice, but also may interface with this
     mechanism.
+
+
+Troubleshooting
+===============
+
+You may want to manually start the server. This can be done with the following command:
+
+.. code-block:: shell
+
+  PYTHONPATH=$HOME/.ansible/collections python -m ansible_collections.cloud.common.plugins.module_utils.turbo.server --socket-path $HOME/.ansible/tmp/turbo_mode.socket
+
+You can use the ``--help`` argument to get a list of the optional parameters.
