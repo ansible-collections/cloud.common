@@ -23,7 +23,7 @@ from .exceptions import (
     EmbeddedModuleSuccess,
 )
 
-sys_path_lock = asyncio.Lock()
+sys_path_lock = None
 
 import ansible.module_utils.basic
 
@@ -223,6 +223,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.fork:
         fork_process()
+    sys_path_lock = asyncio.Lock()
 
     server = AnsibleVMwareTurboMode()
     server.socket_path = args.socket_path
