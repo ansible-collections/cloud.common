@@ -1,0 +1,3 @@
+---
+bugfixes:
+- Ensure the background service starts properly on MacOS (https://github.com/ansible-collections/cloud.common/pull/16)
