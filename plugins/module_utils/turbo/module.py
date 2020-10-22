@@ -68,7 +68,11 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         self.connect()
         result = dict(changed=False, original_message="", message="")
         ansiblez_path = sys.path[0]
-        args = {"ANSIBLE_MODULE_ARGS": {k: v for k, v in self.params.items() if v}}
+        args = {
+            "ANSIBLE_MODULE_ARGS": {
+                k: v for k, v in self.params.items() if v is not None
+            }
+        }
         data = [
             ansiblez_path,
             json.dumps(args),
