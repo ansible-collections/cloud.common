@@ -1,0 +1,3 @@
+---
+minor_changes:
+- ansible_module.turbo - the cache is now associated with the collection, if two collections use a cache, two background services will be started.

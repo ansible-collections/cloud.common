@@ -15,13 +15,23 @@ if False:  # pylint: disable=using-constant-test
     please_include_me
 
 
+def collection_name():
+    module_path = ansible.module_utils.basic.get_module_path()
+
+    ansiblez = module_path.split("/")[-3]
+    if ansiblez.startswith("ansible_") and ansiblez.endswith(".zip"):
+        return ".".join(ansiblez[8:].split(".")[:2])
+
+
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     embedded_in_server = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._socket = None
-        self._socket_path = os.environ["HOME"] + "/.ansible/tmp/turbo_mode.socket"
+        self._socket_path = (
+            os.environ["HOME"] + f"/.ansible/tmp/turbo_mode.{collection_name()}.socket"
+        )
         self._running = None
         self.embedded_in_server = sys.argv[0].endswith("/server.py")
         if not self.embedded_in_server:
