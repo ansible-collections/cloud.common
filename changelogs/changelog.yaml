@@ -2,3 +2,16 @@ ancestor: null
 releases:
   1.0.2:
     release_date: '2020-10-06'
+  1.1.0:
+    changes:
+      bugfixes:
+      - Ensure the background service starts properly on MacOS (https://github.com/ansible-collections/cloud.common/pull/16)
+      - do not silently skip parameters when the value is ``False``
+      minor_changes:
+      - ansible_module.turbo - the cache is now associated with the collection, if
+        two collections use a cache, two background services will be started.
+    fragments:
+    - dont_ignore_parameters_when_val_is_False.yaml
+    - macos_fix.yaml
+    - one_cache_per_collection.yaml
+    release_date: '2020-10-23'
