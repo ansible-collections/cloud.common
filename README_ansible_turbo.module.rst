@@ -134,6 +134,8 @@ You may want to manually start the server. This can be done with the following c
 
 .. code-block:: shell
 
-  PYTHONPATH=$HOME/.ansible/collections python -m ansible_collections.cloud.common.plugins.module_utils.turbo.server --socket-path $HOME/.ansible/tmp/turbo_mode.socket
+  PYTHONPATH=$HOME/.ansible/collections python -m ansible_collections.cloud.common.plugins.module_utils.turbo.server --socket-path $HOME/.ansible/tmp/turbo_mode.foo.bar.socket
+
+Replace ``foo.bar`` with the name of the collection.
 
 You can use the ``--help`` argument to get a list of the optional parameters.
