@@ -157,6 +157,10 @@ class EmbeddedModule:
         except Exception as e:
             backtrace = traceback.format_exc()
             raise EmbeddedModuleUnexpectedFailure(backtrace)
+        else:
+            raise EmbeddedModuleUnexpectedFailure(
+                "Likely a bug: exit_json() or fail_json() should be called during the module excution"
+            )
 
 
 class AnsibleVMwareTurboMode:
