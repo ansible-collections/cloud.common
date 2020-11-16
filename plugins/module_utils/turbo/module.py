@@ -89,6 +89,12 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
                 k: v for k, v in self.params.items() if v is not None
             }
         }
+        for k in ansible.module_utils.basic.PASS_VARS:
+            if not hasattr(self, k):
+                continue
+            v = getattr(self, k)
+            if isinstance(v, int) or isinstance(v, bool) or isinstance(v, str):
+                args["ANSIBLE_MODULE_ARGS"][f"_ansible_{k}"] = v
         data = [
             ansiblez_path,
             json.dumps(args),
