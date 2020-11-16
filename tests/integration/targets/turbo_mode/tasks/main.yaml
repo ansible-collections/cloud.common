@@ -1,0 +1,21 @@
+- cloud.common.turbo_demo:
+  with_sequence: count=10
+  register: _result
+- debug: var=_result.results[-1]
+- assert:
+    that:
+      - _result.results[-1].counter == 10
+- cloud.common.turbo_demo:
+  with_sequence: count=10
+  check_mode: True
+  register: _result
+- assert:
+    that:
+      - _result.results[-1].counter == 10
+- cloud.common.turbo_demo:
+  with_sequence: count=10
+  become: true
+  register: _result
+- assert:
+    that:
+      - _result.results[-1].counter == 10
