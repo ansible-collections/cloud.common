@@ -1,6 +1,8 @@
 class EmbeddedModuleFailure(Exception):
-    def __init__(self, msg):
+    def __init__(self, msg, **kwargs):
         self._message = msg
+        if kwargs:
+            self._message += str(kwargs)
 
     def get_message(self):
         return repr(self._message)
