@@ -38,20 +38,22 @@ if True:  # pylint: disable=using-constant-test
 
 
 def get_message():
-    return f"This is me running with PID: {os.getpid()}, called {counter()} time(s)"
+    return f"This is me running with PID: {os.getpid()}, called {counter.i} time(s)"
 
 
 def run_module():
-    result = dict(changed=False, message=get_message())
+    result = {}
 
     # the AnsibleModule object will be our abstraction working with Ansible
     # this includes instantiation, a couple of common attr would be the
     # args/params passed to the execution, as well as if the module
     # supports check mode
     module = AnsibleModule(argument_spec={}, supports_check_mode=True)
-
-    if module.check_mode:
-        module.exit_json(**result)
+    if not module.check_mode:
+        counter()
+        result["changed"] = True
+    result["message"] = get_message()
+    result["counter"] = counter.i
 
     module.exit_json(**result)
 
