@@ -1,17 +1,19 @@
-class EmbeddedModuleFailure(Exception):
+class EmbeddedModuleBaseException(Exception):
     def __init__(self, msg):
         self._message = msg
 
     def get_message(self):
-        return repr(self._message)
+        return str(self._message)
 
 
-class EmbeddedModuleUnexpectedFailure(Exception):
+class EmbeddedModuleFailure(EmbeddedModuleBaseException):
     def __init__(self, msg):
-        self._message = msg
+        super(EmbeddedModuleFailure, self).__init__(msg=msg)
 
-    def get_message(self):
-        return repr(self._message)
+
+class EmbeddedModuleUnexpectedFailure(EmbeddedModuleBaseException):
+    def __init__(self, msg):
+        super(EmbeddedModuleUnexpectedFailure, self).__init__(msg=msg)
 
 
 class EmbeddedModuleSuccess(Exception):
