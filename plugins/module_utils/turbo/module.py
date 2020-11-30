@@ -102,10 +102,11 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         _socket.send(json.dumps(data).encode())
         raw_answer = b""
         while True:
-            b = _socket.recv((1024 * 10))
+            b = _socket.recv((1024 * 1024))
             if not b:
                 break
             raw_answer += b
+            time.sleep(0.01)
         _socket.close()
 
         result = json.loads(raw_answer.decode())
