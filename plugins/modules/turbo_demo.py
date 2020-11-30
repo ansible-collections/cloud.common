@@ -49,6 +49,7 @@ def run_module():
     # args/params passed to the execution, as well as if the module
     # supports check mode
     module = AnsibleModule(argument_spec={}, supports_check_mode=True)
+    module.collection_name = "cloud.common"
     if not module.check_mode:
         counter()
         result["changed"] = True
