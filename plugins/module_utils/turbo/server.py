@@ -74,6 +74,7 @@ class EmbeddedModule:
         self.collection_name, self.module_name = self.find_module_name()
         self.params = params
         self.module_class = None
+        self.debug_mode = False
         self.module_path = (
             "ansible_collections.{collection_name}." "plugins.modules.{module_name}"
         ).format(collection_name=self.collection_name, module_name=self.module_name)
@@ -129,6 +130,24 @@ class EmbeddedModule:
                 if not (isinstance(i, zipimporter) and i.archive == self.ansiblez_path)
             ]
 
+    def create_profiler(self):
+        if self.debug_mode:
+            import cProfile
+
+            return cProfile.Profile()
+
+    def print_profiling_info(self, pr):
+        if self.debug_mode:
+            import pstats
+
+            sortby = pstats.SortKey.CUMULATIVE
+            ps = pstats.Stats(pr).sort_stats(sortby)
+            ps.print_stats(20)
+
+    def print_backtrace(self, backtrace):
+        if self.debug_mode:
+            print(backtrace)
+
     async def run(self):
         class FakeStdin:
             buffer = None
@@ -143,20 +162,27 @@ class EmbeddedModule:
         # try to build the module parameters from the daemon arguments
         sys.argv = sys.argv[:1]
         ansible.module_utils.basic._ANSIBLE_ARGS = None
+        pr = self.create_profiler()
         if not hasattr(self.module_class, "main"):
             raise EmbeddedModuleFailure("No main() found!")
         try:
             if inspect.iscoroutinefunction(self.module_class.main):
                 await self.module_class.main()
+            elif pr:
+                pr.runcall(self.module_class.main)
             else:
                 self.module_class.main()
         except EmbeddedModuleSuccess as e:
+            self.print_profiling_info(pr)
             return e.kwargs
-        except EmbeddedModuleFailure:
+        except EmbeddedModuleFailure as e:
+            backtrace = traceback.format_exc()
+            self.print_backtrace(backtrace)
             raise
         except Exception as e:
             backtrace = traceback.format_exc()
-            raise EmbeddedModuleUnexpectedFailure(backtrace)
+            self.print_backtrace(backtrace)
+            raise EmbeddedModuleUnexpectedFailure(str(backtrace))
         else:
             raise EmbeddedModuleUnexpectedFailure(
                 "Likely a bug: exit_json() or fail_json() should be called during the module excution"
@@ -168,6 +194,7 @@ class AnsibleVMwareTurboMode:
         self.sessions = collections.defaultdict(dict)
         self.socket_path = None
         self.ttl = None
+        self.debug_mode = None
 
     async def ghost_killer(self):
         await asyncio.sleep(self.ttl)
@@ -184,12 +211,19 @@ class AnsibleVMwareTurboMode:
             ansiblez_path,
             params,
         ) = json.loads(raw_data)
+        if self.debug_mode:
+            print(f"-----\nrunning {ansiblez_path} with params: f{params}")
 
         embedded_module = EmbeddedModule(ansiblez_path, params)
+        if self.debug_mode:
+            embedded_module.debug_mode = True
 
         await embedded_module.load()
         try:
             result = await embedded_module.run()
+        except SystemExit:
+            backtrace = traceback.format_exc()
+            result = {"msg": str(backtrace), "failed": True}
         except EmbeddedModuleFailure as e:
             result = {"msg": str(e), "failed": True}
         except Exception as e:
@@ -232,4 +266,5 @@ if __name__ == "__main__":
     server = AnsibleVMwareTurboMode()
     server.socket_path = args.socket_path
     server.ttl = args.ttl
+    server.debug_mode = not args.fork
     server.start()
