@@ -23,3 +23,4 @@ plugins/module_utils/turbo/server.py metaclass-boilerplate!skip
 plugins/modules/turbo_demo.py metaclass-boilerplate!skip
 plugins/module_utils/turbo/exceptions.py metaclass-boilerplate!skip
 tests/unit/module_utils/test_turbo_module.py metaclass-boilerplate!skip
+plugins/module_utils/turbo/server.py pylint:ansible-bad-function
