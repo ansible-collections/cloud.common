@@ -19,7 +19,7 @@ if False:  # pylint: disable=using-constant-test
     please_include_me
 
 
-def collection_name():
+def get_collection_name_from_path():
     module_path = ansible.module_utils.basic.get_module_path()
 
     ansiblez = module_path.split("/")[-3]
@@ -73,19 +73,28 @@ def start_daemon(socket_path, ttl=None):
 
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     embedded_in_server = False
+    collection_name = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._socket_path = (
-            os.environ["HOME"] + f"/.ansible/tmp/turbo_mode.{collection_name()}.socket"
+        self.collection_name = (
+            AnsibleTurboModule.collection_name or get_collection_name_from_path()
+        )
+        ansible.module_utils.basic.AnsibleModule.__init__(
+            self, *args, bypass_checks=True, **kwargs
         )
         self._running = None
         self.embedded_in_server = sys.argv[0].endswith("/server.py")
         if not self.embedded_in_server:
             self.run_on_daemon()
 
+    def socket_path(self):
+        return (
+            os.environ["HOME"]
+            + f"/.ansible/tmp/turbo_mode.{self.collection_name}.socket"
+        )
+
     def run_on_daemon(self):
-        _socket = connect(socket_path=self._socket_path)
+        _socket = connect(socket_path=self.socket_path())
         result = dict(changed=False, original_message="", message="")
         ansiblez_path = sys.path[0]
         args = {
