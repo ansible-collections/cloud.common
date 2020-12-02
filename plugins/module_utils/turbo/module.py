@@ -5,7 +5,11 @@ import sys
 import time
 
 import ansible.module_utils.basic
-from .exceptions import EmbeddedModuleSuccess, EmbeddedModuleFailure
+from .exceptions import (
+    EmbeddedModuleSuccess,
+    EmbeddedModuleFailure,
+    EmbeddedModuleUnexpectedFailure,
+)
 
 if False:  # pylint: disable=using-constant-test
     from .server import please_include_me
@@ -108,8 +112,12 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             raw_answer += b
             time.sleep(0.01)
         _socket.close()
-
-        result = json.loads(raw_answer.decode())
+        try:
+            result = json.loads(raw_answer.decode())
+        except json.decoder.JSONDecodeError:
+            raise EmbeddedModuleUnexpectedFailure(
+                f"Cannot decode module answer: {raw_answer}"
+            )
         self.exit_json(**result)
 
     def exit_json(self, **kwargs):
