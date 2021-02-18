@@ -76,14 +76,14 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     collection_name = None
 
     def __init__(self, *args, **kwargs):
+        self.embedded_in_server = sys.argv[0].endswith("/server.py")
         self.collection_name = (
             AnsibleTurboModule.collection_name or get_collection_name_from_path()
         )
         ansible.module_utils.basic.AnsibleModule.__init__(
-            self, *args, bypass_checks=True, **kwargs
+            self, *args, bypass_checks=not self.embedded_in_server, **kwargs
         )
         self._running = None
-        self.embedded_in_server = sys.argv[0].endswith("/server.py")
         if not self.embedded_in_server:
             self.run_on_daemon()
 
