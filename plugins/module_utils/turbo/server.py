@@ -62,9 +62,9 @@ def fork_process():
 
         pid = os.fork()
         if pid > 0:
-            os._exit(0)
+            sys.exit(0)  # pylint: disable=ansible-bad-function
     else:
-        exit(0)
+        sys.exit(0)  # pylint: disable=ansible-bad-function
     return pid
 
 
@@ -146,7 +146,7 @@ class EmbeddedModule:
 
     def print_backtrace(self, backtrace):
         if self.debug_mode:
-            print(backtrace)
+            print(backtrace)  # pylint: disable=ansible-bad-function
 
     async def run(self):
         class FakeStdin:
@@ -212,7 +212,9 @@ class AnsibleVMwareTurboMode:
             params,
         ) = json.loads(raw_data)
         if self.debug_mode:
-            print(f"-----\nrunning {ansiblez_path} with params: f{params}")
+            print(  # pylint: disable=ansible-bad-function
+                f"-----\nrunning {ansiblez_path} with params: f{params}"
+            )  # pylint: disable=ansible-bad-function
 
         embedded_module = EmbeddedModule(ansiblez_path, params)
         if self.debug_mode:
