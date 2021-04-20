@@ -134,7 +134,8 @@ class EmbeddedModule:
         if self.debug_mode:
             import cProfile
 
-            return cProfile.Profile()
+            pr = cProfile.Profile()
+            pr.enable()
 
     def print_profiling_info(self, pr):
         if self.debug_mode:
@@ -213,8 +214,8 @@ class AnsibleVMwareTurboMode:
         ) = json.loads(raw_data)
         if self.debug_mode:
             print(  # pylint: disable=ansible-bad-function
-                f"-----\nrunning {ansiblez_path} with params: f{params}"
-            )  # pylint: disable=ansible-bad-function
+                f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
+            )
 
         embedded_module = EmbeddedModule(ansiblez_path, params)
         if self.debug_mode:
