@@ -1,3 +1,0 @@
----
-minor_changes:
-- fail_json now accept and collect extra named arguments.

@@ -1,4 +1,0 @@
----
-minor_changes:
-- When the background service is started in a console without the ``--daemon`` flag, it
-  now prints information what it runs.

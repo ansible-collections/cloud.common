@@ -1,5 +1,0 @@
----
-minor_changes:
-- The ``EmbeddedModuleFailure`` and ``EmbeddedModuleUnexpectedFailure`` exceptions now
-  handle the ``__repr__`` and ``__str__`` method. This means Python is able to print
-  a meaningful output.

@@ -1,3 +1,0 @@
----
-minor_changes:
-- the user get an error now an error if a module don't raise ``exit_json()`` or ``fail_json()``.

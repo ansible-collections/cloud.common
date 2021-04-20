@@ -1,4 +1,0 @@
----
-minor_changes:
-- The modules must now set the ``collection_name`` of the ``AnsibleTurboModule`` class. The
-  content of this attribute is used to build the path of the UNIX socket.
