@@ -93,21 +93,56 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             + f"/.ansible/tmp/turbo_mode.{self.collection_name}.socket"
         )
 
-    def run_on_daemon(self):
-        _socket = connect(socket_path=self.socket_path())
-        result = dict(changed=False, original_message="", message="")
-        ansiblez_path = sys.path[0]
-        args = {
-            "ANSIBLE_MODULE_ARGS": {
-                k: v for k, v in self.params.items() if v is not None
-            }
-        }
+    def _get_argument_specs(self):
+        """Returns a dict of accepted argument that includes the aliases"""
+        argument_specs = {}
+        for k, v in self.argument_spec.items():
+            for alias in [k] + v.get("aliases", []):
+                argument_specs[alias] = v
+        return argument_specs
+
+    def _prepare_args(self):
+        argument_specs = self._get_argument_specs()
+
+        def _keep_value(v, argument_specs, key, subkey=None):
+            if v is None:  # cannot be a valide parameter
+                return False
+            if key not in argument_specs:  # should never happen
+                return
+            if not subkey:  # level 1 parameter
+                return v != argument_specs[key].get("default")
+            elif subkey not in argument_specs[key]:  # Freeform
+                return True
+            elif isinstance(argument_specs[key][subkey], dict):
+                return v != argument_specs[key][subkey].get("default")
+            else:  # should never happen
+                return True
+
+        new_params = {}
+        for k, v in self.params.items():
+            if not _keep_value(v, argument_specs, k):
+                continue
+
+            if isinstance(v, dict):
+                new_params[k] = {
+                    i: j for i, j in v.items() if _keep_value(j, argument_specs, k, i)
+                }
+            else:
+                new_params[k] = v
+        args = {"ANSIBLE_MODULE_ARGS": new_params}
         for k in ansible.module_utils.basic.PASS_VARS:
             if not hasattr(self, k):
                 continue
             v = getattr(self, k)
             if isinstance(v, int) or isinstance(v, bool) or isinstance(v, str):
                 args["ANSIBLE_MODULE_ARGS"][f"_ansible_{k}"] = v
+        return args
+
+    def run_on_daemon(self):
+        _socket = connect(socket_path=self.socket_path())
+        result = dict(changed=False, original_message="", message="")
+        ansiblez_path = sys.path[0]
+        args = self._prepare_args()
         data = [
             ansiblez_path,
             json.dumps(args),
