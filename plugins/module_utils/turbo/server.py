@@ -136,6 +136,7 @@ class EmbeddedModule:
 
             pr = cProfile.Profile()
             pr.enable()
+            return pr
 
     def print_profiling_info(self, pr):
         if self.debug_mode:
