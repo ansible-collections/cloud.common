@@ -5,13 +5,13 @@ class EmbeddedModuleFailure(Exception):
             self._message += str(kwargs)
 
     def get_message(self):
-        return repr(self._message)
+        return self._message
 
     def __repr__(self):
-        return self.get_message()
+        return repr(self.get_message())
 
     def __str__(self):
-        return self.get_message()
+        return str(self.get_message())
 
 
 class EmbeddedModuleUnexpectedFailure(Exception):
@@ -19,13 +19,13 @@ class EmbeddedModuleUnexpectedFailure(Exception):
         self._message = msg
 
     def get_message(self):
-        return repr(self._message)
+        return self._message
 
     def __repr__(self):
-        return self.get_message()
+        return repr(self.get_message())
 
     def __str__(self):
-        return self.get_message()
+        return str(self.get_message())
 
 
 class EmbeddedModuleSuccess(Exception):
