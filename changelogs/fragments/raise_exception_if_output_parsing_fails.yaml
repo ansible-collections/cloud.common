@@ -1,3 +1,0 @@
----
-minor_changes:
-- "raise an exception if the output of module execution cannot be parsed."

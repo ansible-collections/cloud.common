@@ -1,3 +1,0 @@
----
-bugfixes:
-- the debug mode now work as expected. The ``_ansible_*`` variables are properly passed to the module.
