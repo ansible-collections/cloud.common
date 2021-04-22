@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - fix exception messages containing extra single quotes (https://github.com/ansible-collections/cloud.common/pull/46).
