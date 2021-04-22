@@ -5,6 +5,16 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.0.1
+======
+
+Bugfixes
+--------
+
+- The profiler is now properly initialized.
+- Use the argument_spec values to determine which option should actually be used.
+- fix exception messages containing extra single quotes (https://github.com/ansible-collections/cloud.common/pull/46).
+
 v2.0.0
 ======
 
