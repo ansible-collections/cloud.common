@@ -46,3 +46,15 @@ releases:
     - raise-an-error-if-exit_json-or-fail_json-not-called_13453.yaml
     - raise_exception_if_output_parsing_fails.yaml
     release_date: '2021-04-20'
+  2.0.1:
+    changes:
+      bugfixes:
+      - The profiler is now properly initialized.
+      - Use the argument_spec values to determine which option should actually be
+        used.
+      - fix exception messages containing extra single quotes (https://github.com/ansible-collections/cloud.common/pull/46).
+    fragments:
+    - 46-fix-error-message-string.yaml
+    - actually_enable_the_profiler.yaml
+    - filter_argument_with_argument_spec.yaml
+    release_date: '2021-04-22'
