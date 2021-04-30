@@ -11,7 +11,7 @@ import socket
 import subprocess
 import ansible.module_utils.basic
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
-    collection_name,
+    get_collection_name_from_path,
     connect,
     start_daemon,
 )
@@ -31,7 +31,7 @@ def test_collection_name(monkeypatch, my_module_path, my_collection_name):
         return my_module_path
 
     monkeypatch.setattr(ansible.module_utils.basic, "get_module_path", mocked_func)
-    assert collection_name() == my_collection_name
+    assert get_collection_name_from_path() == my_collection_name
 
 
 def test_start_daemon(monkeypatch):
