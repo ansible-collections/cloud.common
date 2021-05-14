@@ -244,11 +244,19 @@ class AnsibleVMwareTurboMode:
         self.loop.add_signal_handler(signal.SIGTERM, self.stop)
         self._watcher = self.loop.create_task(self.ghost_killer())
 
-        self.loop.create_task(
-            asyncio.start_unix_server(
-                self.handle, path=self.socket_path, loop=self.loop
+        import sys
+
+        if sys.hexversion >= 0x30A00B1:
+            # py3.10 drops the loop argument of create_task.
+            self.loop.create_task(
+                asyncio.start_unix_server(self.handle, path=self.socket_path)
             )
-        )
+        else:
+            self.loop.create_task(
+                asyncio.start_unix_server(
+                    self.handle, path=self.socket_path, loop=self.loop
+                )
+            )
         self.loop.run_forever()
 
     def stop(self):
