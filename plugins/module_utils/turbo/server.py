@@ -230,6 +230,8 @@ class AnsibleVMwareTurboMode:
             result = {"msg": str(backtrace), "failed": True}
         except EmbeddedModuleFailure as e:
             result = {"msg": str(e), "failed": True}
+            if e.kwargs:
+                result.update(e.kwargs)
         except Exception as e:
             result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
 
