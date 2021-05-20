@@ -10,7 +10,7 @@ Current situation
 The traditional execution flow of an Ansible module includes
 the following steps:
 
-- Upload of a zip archive with the module and its dependencies
+- Upload of a ZIP archive with the module and its dependencies
 - Execution of the module, which is just a Python script
 - Ansible collects the results once the script is finished
 
@@ -34,9 +34,11 @@ will be running again and again.
 
 For instance, here:
 
-- ``import openstack``: tasks 0.569s
-- ``client = openstack.connect()``: 0.065s
-- ``client.authorize()``: 1.360s, I run my test against VexxHost public cloud.
+- ``import openstack``: takes 0.569s
+- ``client = openstack.connect()``: takes 0.065s
+- ``client.authorize()``: takes 1.360s
+
+These numbers are from test ran against VexxHost public cloud.
 
 In this case, it's a 2s-ish overhead per task. If the playbook
 comes with 10 tasks, the execution time cannot go below 20s.
@@ -55,8 +57,8 @@ All the module logic is run inside this Python daemon. This means:
 - Python modules are actually loaded one time
 - Ansible module can reuse an existing authenticated session.
 
-How can I enable ```AnsibleTurboModule``?
-=========================================
+How can I enable ``AnsibleTurboModule``?
+========================================
 
 If you are a collection maintainer and want to enable ``AnsibleTurboModule``, you can
 follow these steps.
@@ -87,6 +89,7 @@ as unicity criteria.
 
 - Integration with OpenStack Collection: https://github.com/goneri/ansible-collections-openstack/commit/53ce9860bb84eeab49a46f7a30e3c9588d53e367
 - Integration with VMware Collection: https://github.com/goneri/vmware/commit/d1c02b93cbf899fde3a4665e6bcb4d7531f683a3
+- Integration with Kubernetes Collection: https://github.com/ansible-collections/kubernetes.core/pull/68
 
 Demo
 ====
