@@ -22,4 +22,3 @@
       - result.environment == "production"
       - result.test.phase == "integration"
       - result.test.release == 1.0
-

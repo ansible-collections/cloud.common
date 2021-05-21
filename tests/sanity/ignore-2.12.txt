@@ -27,3 +27,11 @@ plugins/modules/turbo_demo.py import-2.6!skip
 plugins/modules/turbo_demo.py import-2.7!skip
 plugins/modules/turbo_demo.py import-3.5!skip
 plugins/modules/turbo_demo.py metaclass-boilerplate!skip
+plugins/modules/turbo_fail.py compile-2.6!skip
+plugins/modules/turbo_fail.py compile-2.7!skip
+plugins/modules/turbo_fail.py compile-3.5!skip
+plugins/modules/turbo_fail.py future-import-boilerplate!skip
+plugins/modules/turbo_fail.py import-2.6!skip
+plugins/modules/turbo_fail.py import-2.7!skip
+plugins/modules/turbo_fail.py import-3.5!skip
+plugins/modules/turbo_fail.py metaclass-boilerplate!skip
