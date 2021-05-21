@@ -21,7 +21,7 @@ author:
 - Aubin Bikouo (@abikouo)
 """
 
-EXAMPLES = r'''
+EXAMPLES = r"""
 - name: Fail without additional arguments
   cloud.common.turbo_fail:
 
@@ -29,7 +29,7 @@ EXAMPLES = r'''
   cloud.common.turbo_fail:
     params:
         test: "ansible"
-'''
+"""
 
 import os
 
@@ -41,13 +41,13 @@ from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
 def run_module():
     module = AnsibleModule(
         argument_spec=dict(
-            params=dict(type='dict'),
+            params=dict(type="dict"),
         )
     )
     module.collection_name = "cloud.common"
     msg = "ansible.cloud.fail"
-    if module.params.get('params'):
-        module.fail_json(msg=msg, **module.params.get('params'))
+    if module.params.get("params"):
+        module.fail_json(msg=msg, **module.params.get("params"))
     module.fail_json(msg=msg)
 
 
