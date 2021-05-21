@@ -6,11 +6,11 @@
 
 DOCUMENTATION = r"""
 ---
-module: turbo_faili
+module: turbo_fail
 short_description: A short module which honor additional args when calling fail_json
 version_added: "1.0.0"
 description:
-- "This module aims to test failures on Ansible.turbo module"
+- "This module aims to test fail_json method on Ansible.turbo module"
 options:
   params:
     description:
