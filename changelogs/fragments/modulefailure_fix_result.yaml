@@ -1,0 +1,3 @@
+---
+bugfixes:
+- fail_json method should honor kwargs now when running embedded in server.
