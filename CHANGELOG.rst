@@ -5,6 +5,15 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.0.2
+======
+
+Bugfixes
+--------
+
+- Introduces a fix for the future Python 3.10 (#53)
+- fail_json method should honor kwargs now when running embedded in server.
+
 v2.0.1
 ======
 
