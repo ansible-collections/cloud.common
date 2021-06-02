@@ -58,3 +58,12 @@ releases:
     - actually_enable_the_profiler.yaml
     - filter_argument_with_argument_spec.yaml
     release_date: '2021-04-22'
+  2.0.2:
+    changes:
+      bugfixes:
+      - Introduces a fix for the future Python 3.10 (#53)
+      - fail_json method should honor kwargs now when running embedded in server.
+    fragments:
+    - modulefailure_fix_result.yaml
+    - py3.10-fix.yaml
+    release_date: '2021-06-02'
