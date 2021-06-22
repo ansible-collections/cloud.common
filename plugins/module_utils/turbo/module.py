@@ -147,7 +147,8 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             ansiblez_path,
             json.dumps(args),
         ]
-        _socket.send(json.dumps(data).encode())
+        _socket.sendall(json.dumps(data).encode())
+        _socket.shutdown(socket.SHUT_WR)
         raw_answer = b""
         while True:
             b = _socket.recv((1024 * 1024))
