@@ -43,8 +43,8 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
 
     def socket_path(self):
         return (
-            os.environ["HOME"]
-            + f"/.ansible/tmp/turbo_mode.{self.collection_name}.socket"
+            self._remote_tmp
+            + f"/turbo_mode.{self.collection_name}.socket"
         )
 
     def _get_argument_specs(self):
