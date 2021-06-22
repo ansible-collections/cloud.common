@@ -205,7 +205,7 @@ class AnsibleVMwareTurboMode:
     async def handle(self, reader, writer):
         self._watcher.cancel()
 
-        raw_data = await reader.read(1024 * 10)
+        raw_data = await reader.read()
         if not raw_data:
             return
 
