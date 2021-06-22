@@ -1,5 +1,0 @@
----
-bugfixes:
-  - turbo - make sure socket doesn't close prematurely, preventing issues with
-    large amounts of data passed as module parameters
-    (https://github.com/ansible-collections/cloud.common/issues/61)

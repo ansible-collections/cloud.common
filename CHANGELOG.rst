@@ -5,6 +5,15 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.0.3
+======
+
+Bugfixes
+--------
+
+- Introduces a fix for the future Python 3.10 (#53)
+- turbo - make sure socket doesn't close prematurely, preventing issues with large amounts of data passed as module parameters (https://github.com/ansible-collections/cloud.common/issues/61)
+
 v2.0.2
 ======
 
