@@ -19,3 +19,15 @@
 - assert:
     that:
       - _result.results[-1].counter == 10
+- cloud.common.turbo_demo:
+  diff: yes
+  register: _result_with_diff
+- assert:
+    that:
+      - _result_with_diff.diff is defined
+- cloud.common.turbo_demo:
+  diff: no
+  register: _result_no_diff
+- assert:
+    that:
+      - _result_no_diff.diff is undefined

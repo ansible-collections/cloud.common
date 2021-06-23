@@ -131,9 +131,10 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
                 new_params[k] = v
         args = {"ANSIBLE_MODULE_ARGS": new_params}
         for k in ansible.module_utils.basic.PASS_VARS:
-            if not hasattr(self, k):
+            attribute = ansible.module_utils.basic.PASS_VARS[k][0]
+            if not hasattr(self, attribute):
                 continue
-            v = getattr(self, k)
+            v = getattr(self, attribute)
             if isinstance(v, int) or isinstance(v, bool) or isinstance(v, str):
                 args["ANSIBLE_MODULE_ARGS"][f"_ansible_{k}"] = v
         return args

@@ -50,11 +50,15 @@ def run_module():
     # supports check mode
     module = AnsibleModule(argument_spec={}, supports_check_mode=True)
     module.collection_name = "cloud.common"
+    previous_value = counter.i
     if not module.check_mode:
         counter()
         result["changed"] = True
     result["message"] = get_message()
     result["counter"] = counter.i
+
+    if module._diff:
+        result["diff"] = {"before": previous_value, "after": counter.i}
 
     module.exit_json(**result)
 
