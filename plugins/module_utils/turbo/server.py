@@ -277,6 +277,10 @@ if __name__ == "__main__":
         fork_process()
     sys_path_lock = asyncio.Lock()
 
+    # from datetime import datetime
+    # with open(f'/home/aubin/work/common/start_{datetime.now().strftime("%s")}.txt', 'w') as f:
+    #     f.write(f"start daemon at {os.getpid()}\n")
+
     server = AnsibleVMwareTurboMode()
     server.socket_path = args.socket_path
     server.ttl = args.ttl
