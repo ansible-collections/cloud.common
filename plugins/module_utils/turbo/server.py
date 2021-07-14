@@ -241,9 +241,15 @@ class AnsibleVMwareTurboMode:
 
         await embedded_module.unload()
 
+    def handle_exception(self, loop, context):
+        e = context.get("exception")
+        traceback.print_exception(type(e), e, e.__traceback__)
+        self.stop()
+
     def start(self):
         self.loop = asyncio.get_event_loop()
         self.loop.add_signal_handler(signal.SIGTERM, self.stop)
+        self.loop.set_exception_handler(self.handle_exception)
         self._watcher = self.loop.create_task(self.ghost_killer())
 
         import sys
