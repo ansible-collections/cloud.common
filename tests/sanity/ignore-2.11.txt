@@ -32,6 +32,8 @@ tests/unit/module_utils/test_turbo_module.py compile-2.7!skip
 tests/unit/module_utils/test_turbo_module.py compile-3.5!skip
 tests/unit/module_utils/test_turbo_module.py future-import-boilerplate!skip
 tests/unit/module_utils/test_turbo_module.py metaclass-boilerplate!skip
+tests/unit/module_utils/test_turbo_server.py future-import-boilerplate!skip
+tests/unit/module_utils/test_turbo_server.py metaclass-boilerplate!skip
 plugins/modules/turbo_fail.py compile-2.6!skip
 plugins/modules/turbo_fail.py compile-2.7!skip
 plugins/modules/turbo_fail.py compile-3.5!skip

@@ -147,6 +147,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         data = [
             ansiblez_path,
             json.dumps(args),
+            dict(os.environ),
         ]
         _socket.sendall(json.dumps(data).encode())
         _socket.shutdown(socket.SHUT_WR)

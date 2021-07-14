@@ -56,6 +56,7 @@ def run_module():
         result["changed"] = True
     result["message"] = get_message()
     result["counter"] = counter.i
+    result["envvar"] = os.environ.get("TURBO_TEST_VAR")
 
     if module._diff:
         result["diff"] = {"before": previous_value, "after": counter.i}
