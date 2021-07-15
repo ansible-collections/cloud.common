@@ -10,7 +10,7 @@ lookup: turbo_demo
 author:
   - Aubin Bikouo (@abikouo)
 
-short_description: A demo for cloud.common.plugins.modules_utils.turbo.lookup.
+short_description: A demo for lookup plugins on cloud.common
 description:
   - return the parent process of the running process
 options:

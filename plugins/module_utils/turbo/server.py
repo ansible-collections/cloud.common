@@ -149,10 +149,10 @@ class EmbeddedModule:
             buffer = None
 
         from .exceptions import (
-                EmbeddedModuleFailure,
-                EmbeddedModuleUnexpectedFailure,
-                EmbeddedModuleSuccess,
-            )
+            EmbeddedModuleFailure,
+            EmbeddedModuleUnexpectedFailure,
+            EmbeddedModuleSuccess,
+        )
 
         # monkeypatching to pass the argument to the module, this is not
         # really safe, and in the future, this will prevent us to run several
@@ -225,6 +225,7 @@ def run_lookup_plugin(data):
         errors = to_native(e)
     return [result, errors]
 
+
 class AnsibleVMwareTurboMode:
     def __init__(self):
         self.sessions = collections.defaultdict(dict)
@@ -243,18 +244,16 @@ class AnsibleVMwareTurboMode:
         if not raw_data:
             return
 
-        (
-            plugin_type,
-            content
-        ) = pickle.loads(raw_data)
+        (plugin_type, content) = pickle.loads(raw_data)
 
         def _terminate(result):
             writer.write(json.dumps(result).encode())
             writer.close()
             self._watcher = self.loop.create_task(self.ghost_killer())
-        
+
         if plugin_type == "module":
-            from .exceptions import EmbeddedModuleFailure
+            from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import EmbeddedModuleFailure
+
             try:
                 (
                     ansiblez_path,
@@ -280,7 +279,10 @@ class AnsibleVMwareTurboMode:
                     if e.kwargs:
                         result.update(e.kwargs)
                 except Exception as e:
-                    result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
+                    result = {
+                        "msg": traceback.format_stack() + [str(e)],
+                        "failed": True,
+                    }
 
                 _terminate(result)
                 await embedded_module.unload()
@@ -288,7 +290,6 @@ class AnsibleVMwareTurboMode:
                 result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
                 _terminate(result)
 
-        
         elif plugin_type == "lookup":
 
             result = run_lookup_plugin(content)

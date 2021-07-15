@@ -1,54 +1,9 @@
-import json
 import os
-import socket
-import sys
-import time
-import subprocess
-import pickle
 
 from ansible.plugins.lookup import LookupBase
 from ansible.module_utils.six import string_types
-
-from .exceptions import EmbeddedModuleUnexpectedFailure
-
-
-def start_daemon(socket_path, server_py, ttl=None):
-
-    parameters = [
-        "--fork",
-        "--socket-path",
-        socket_path,
-    ]
-
-    if ttl:
-        parameters += ["--ttl", str(ttl)]
-
-    p = subprocess.Popen(
-        [
-            sys.executable,
-            server_py,
-        ]
-        + parameters,
-        env=os.environ,
-        close_fds=True,
-    )
-    p.communicate()
-    return p.pid
-
-
-def connect(socket_path, server_py, ttl=None):
-    running = False
-    _socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    for attempt in range(100, -1, -1):
-        try:
-            _socket.connect(socket_path)
-            return _socket
-        except (ConnectionRefusedError, FileNotFoundError):
-            if not running:
-                running = start_daemon(socket_path, server_py, ttl)
-            if attempt == 0:
-                raise
-        time.sleep(0.01)
+import ansible_collections.cloud.common.plugins.module_utils.turbo.common
+from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import EmbeddedModuleUnexpectedFailure
 
 
 def get_server_ttl(variables):
@@ -70,18 +25,8 @@ def get_server_ttl(variables):
 
 class TurboLookupBase(LookupBase):
     def run_on_daemon(self, terms, variables=None, **kwargs):
-        if os.path.isfile(self.server_path):
-            self.ttl = get_server_ttl(variables)
-            return self.execute(terms=terms, variables=variables, **kwargs)
-        # run standard lookup (turbo mode not enabled)
-        return self._run(terms=terms, variables=variables, **kwargs)
-
-    @property
-    def server_path(self):
-        if not hasattr(self, "__server_path"):
-            parent_dir = os.path.dirname(__file__)
-            self.__server_path = os.path.join(parent_dir, "server.py")
-        return self.__server_path
+        self._ttl = get_server_ttl(variables)
+        return self.execute(terms=terms, variables=variables, **kwargs)
 
     @property
     def socket_path(self):
@@ -90,7 +35,7 @@ class TurboLookupBase(LookupBase):
             Input:
                 _load_name: ansible_collections.cloud.common.plugins.lookup.turbo_random_lookup
             Output:
-                __socket_path: {HOME}/.ansible/tmp/turbo_lookup_cloud.common.socket
+                __socket_path: {HOME}/.ansible/tmp/turbo_mode_cloud.common.socket
             this will allow to have one socket per collection
             """
             name = self._load_name
@@ -102,30 +47,16 @@ class TurboLookupBase(LookupBase):
                 if idx != -1:
                     name = name[:idx]
             self.__socket_path = (
-                os.environ["HOME"] + f"/.ansible/tmp/turbo_mode.{name}.socket"
+                os.environ["HOME"] + f"/.ansible/tmp/turbo_lookup.{name}.socket"
             )
         return self.__socket_path
 
     def execute(self, terms, variables=None, **kwargs):
-        _socket = connect(self.socket_path, self.server_path, self.ttl)
-        content = (self._load_name, terms, variables, kwargs)
-        encoded_data = pickle.dumps(("lookup", content))
-        _socket.sendall(encoded_data)
-        _socket.shutdown(socket.SHUT_WR)
-        raw_answer = b""
-        while True:
-            b = _socket.recv((1024 * 1024))
-            if not b:
-                break
-            raw_answer += b
-            time.sleep(0.01)
-        _socket.close()
-        try:
-            (result, errors) = json.loads(raw_answer.decode())
+        with ansible_collections.cloud.common.plugins.module_utils.turbo.common.connect(
+            socket_path=self.socket_path, ttl=self._ttl, plugin="lookup"
+        ) as turbo_socket:
+            content = (self._load_name, terms, variables, kwargs)
+            (result, errors) = turbo_socket.communicate(content)
             if errors:
                 raise EmbeddedModuleUnexpectedFailure(errors)
-        except json.decoder.JSONDecodeError:
-            raise EmbeddedModuleUnexpectedFailure(
-                f"Cannot decode lookup answer: {raw_answer}"
-            )
-        return result
+            return result
