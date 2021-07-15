@@ -61,8 +61,6 @@ class LookupModule(LookupBase):
             for fname, line_id, name, line in traceback.extract_stack(stack):
                 if fname == __file__:
                     continue
-                if "cloud/common/plugins/module_utils/turbo/lookup_server.py" in fname:
-                    result.append(f"{os.path.basename(fname)}:{name}")
 
         result.append(f"turbo_demo_counter: {counter()}")
         return result

@@ -10,6 +10,7 @@ from .exceptions import (
     EmbeddedModuleFailure,
     EmbeddedModuleUnexpectedFailure,
 )
+import pickle
 
 if False:  # pylint: disable=using-constant-test
     from .server import please_include_me
@@ -148,7 +149,9 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             ansiblez_path,
             json.dumps(args),
         ]
-        _socket.sendall(json.dumps(data).encode())
+        content = json.dumps(data).encode()
+        encoded_data = pickle.dumps(("module", content))
+        _socket.sendall(encoded_data)
         _socket.shutdown(socket.SHUT_WR)
         raw_answer = b""
         while True:

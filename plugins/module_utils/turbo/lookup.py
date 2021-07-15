@@ -80,7 +80,7 @@ class TurboLookupBase(LookupBase):
     def server_path(self):
         if not hasattr(self, "__server_path"):
             parent_dir = os.path.dirname(__file__)
-            self.__server_path = os.path.join(parent_dir, "lookup_server.py")
+            self.__server_path = os.path.join(parent_dir, "server.py")
         return self.__server_path
 
     @property
@@ -102,13 +102,14 @@ class TurboLookupBase(LookupBase):
                 if idx != -1:
                     name = name[:idx]
             self.__socket_path = (
-                os.environ["HOME"] + f"/.ansible/tmp/turbo_lookup.{name}.socket"
+                os.environ["HOME"] + f"/.ansible/tmp/turbo_mode.{name}.socket"
             )
         return self.__socket_path
 
     def execute(self, terms, variables=None, **kwargs):
         _socket = connect(self.socket_path, self.server_path, self.ttl)
-        encoded_data = pickle.dumps((self._load_name, terms, variables, kwargs))
+        content = (self._load_name, terms, variables, kwargs)
+        encoded_data = pickle.dumps(("lookup", content))
         _socket.sendall(encoded_data)
         _socket.shutdown(socket.SHUT_WR)
         raw_answer = b""
