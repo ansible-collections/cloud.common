@@ -3,7 +3,9 @@ import os
 from ansible.plugins.lookup import LookupBase
 from ansible.module_utils.six import string_types
 import ansible_collections.cloud.common.plugins.module_utils.turbo.common
-from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import EmbeddedModuleUnexpectedFailure
+from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
+    EmbeddedModuleUnexpectedFailure,
+)
 
 
 def get_server_ttl(variables):
@@ -46,9 +48,9 @@ class TurboLookupBase(LookupBase):
                 idx = name.find(lookup_plugins)
                 if idx != -1:
                     name = name[:idx]
-            self.__socket_path = (
-                os.environ["HOME"] + f"/.ansible/tmp/turbo_lookup.{name}.socket"
-            )
+            self.__socket_path = os.environ[
+                "HOME"
+            ] + "/.ansible/tmp/turbo_lookup.{0}.socket".format(name)
         return self.__socket_path
 
     def execute(self, terms, variables=None, **kwargs):

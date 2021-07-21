@@ -47,7 +47,8 @@ if True:  # pylint: disable=using-constant-test
 
 class LookupModule(LookupBase):
     def _run(self, terms, variables=None, playbook_vars=None):
-        result = [f"running from pid: {os.getpid()}"]
+        result = []
+        result.append("running from pid: {pid}".format(pid=os.getpid()))
         if playbook_vars is not None:
             result += [
                 variables["vars"].get(x)
@@ -62,7 +63,7 @@ class LookupModule(LookupBase):
                 if fname == __file__:
                     continue
 
-        result.append(f"turbo_demo_counter: {counter()}")
+        result.append("turbo_demo_counter: {0}".format(counter()))
         return result
 
     run = _run if not hasattr(LookupBase, "run_on_daemon") else LookupBase.run_on_daemon

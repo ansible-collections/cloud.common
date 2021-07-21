@@ -252,7 +252,9 @@ class AnsibleVMwareTurboMode:
             self._watcher = self.loop.create_task(self.ghost_killer())
 
         if plugin_type == "module":
-            from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import EmbeddedModuleFailure
+            from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
+                EmbeddedModuleFailure,
+            )
 
             try:
                 (

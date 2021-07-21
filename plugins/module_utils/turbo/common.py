@@ -25,7 +25,7 @@ class AnsibleTurboSocket:
         for attempt in range(100, -1, -1):
             try:
                 self._socket.connect(self._socket_path)
-                return
+                return True
             except (ConnectionRefusedError, FileNotFoundError):
                 if not running:
                     running = self.start_server()
@@ -80,7 +80,7 @@ class AnsibleTurboSocket:
             return result
         except json.decoder.JSONDecodeError:
             raise EmbeddedModuleUnexpectedFailure(
-                f"Cannot decode plugin answer: {raw_answer}"
+                "Cannot decode plugin answer: {0}".format(raw_answer)
             )
 
     def close(self):
