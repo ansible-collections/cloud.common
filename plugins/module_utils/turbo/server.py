@@ -1,6 +1,5 @@
 import argparse
 import asyncio
-import contextlib
 import importlib
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
@@ -29,15 +28,6 @@ sys_path_lock = None
 import ansible.module_utils.basic
 
 please_include_me = "bar"
-
-
-@contextlib.contextmanager
-def wrap_env(env):
-    original = os.environ.copy()
-    os.environ.update(env)
-    yield
-    os.environ.clear()
-    os.environ.update(original)
 
 
 def fork_process():
@@ -235,8 +225,9 @@ class AnsibleVMwareTurboMode:
 
         await embedded_module.load()
         try:
-            with wrap_env(env):
-                result = await embedded_module.run()
+            os.environ.clear()
+            os.environ.update(env)
+            result = await embedded_module.run()
         except SystemExit:
             backtrace = traceback.format_exc()
             result = {"msg": str(backtrace), "failed": True}
