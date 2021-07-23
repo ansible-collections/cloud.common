@@ -12,9 +12,31 @@ This collection is the home of the following component:
 - [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
 - [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
 - [Ansible Collections Checklist](https://github.com/ansible-collections/overview/blob/master/collection_requirements.rst)
-- [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
 - [The Bullhorn (the Ansible Contributor newsletter)](https://us19.campaign-archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420)
 - [Changes impacting Contributors](https://github.com/ansible-collections/overview/issues/45)
+
+
+## Release notes
+
+See [CHANGELOG.rst](https://github.com/ansible-collections/cloud.common/blob/main/CHANGELOG.rst).
+
+## Releasing, Versioning and Deprecation
+
+This collection follows [Semantic Versioning](https://semver.org/). More details on versioning can be found [in the Ansible docs](https://docs.ansible.com/ansible/latest/dev_guide/developing_collections.html#collection-versions).
+
+We plan to regularly release new minor or bugfix versions once new features or bugfixes have been implemented.
+
+Releasing happens by tagging the `main` branch.
+
+## Contributing to this collection
+
+We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Cloud.Common collection repository](https://github.com/ansible-collections/cloud.common).
+
+## Code of Conduct
+
+We follow [Ansible Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html) in all our interactions within this project.
+
+If you encounter abusive behavior violating the [Ansible Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html), please refer to the [policy violations](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html#policy-violations) section of the Code of Conduct for information on how to raise a complaint.
 
 ## Licensing
 
