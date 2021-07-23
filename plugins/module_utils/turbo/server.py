@@ -15,13 +15,7 @@ import sys
 import traceback
 import zipfile
 from zipimport import zipimporter
-
-
-from .exceptions import (
-    EmbeddedModuleFailure,
-    EmbeddedModuleUnexpectedFailure,
-    EmbeddedModuleSuccess,
-)
+import pickle
 
 sys_path_lock = None
 
@@ -154,6 +148,12 @@ class EmbeddedModule:
         class FakeStdin:
             buffer = None
 
+        from .exceptions import (
+            EmbeddedModuleFailure,
+            EmbeddedModuleUnexpectedFailure,
+            EmbeddedModuleSuccess,
+        )
+
         # monkeypatching to pass the argument to the module, this is not
         # really safe, and in the future, this will prevent us to run several
         # modules in parallel. We can maybe use a scoped monkeypatch instead
@@ -191,6 +191,41 @@ class EmbeddedModule:
             )
 
 
+def run_lookup_plugin(data):
+    errors = None
+    try:
+        import ansible.plugins.loader as plugin_loader
+        from ansible.parsing.dataloader import DataLoader
+        from ansible.template import Templar
+        from ansible.module_utils._text import to_native
+
+        (
+            lookup_name,
+            terms,
+            variables,
+            kwargs,
+        ) = data
+
+        # load lookup plugin
+        templar = Templar(loader=DataLoader(), variables=None)
+        ansible_collections = "ansible_collections."
+        if lookup_name.startswith(ansible_collections):
+            lookup_name = lookup_name.replace(ansible_collections, "", 1)
+        ansible_plugins_lookup = ".plugins.lookup."
+        if ansible_plugins_lookup in lookup_name:
+            lookup_name = lookup_name.replace(ansible_plugins_lookup, ".", 1)
+
+        instance = plugin_loader.lookup_loader.get(
+            name=lookup_name, loader=templar._loader, templar=templar
+        )
+
+        # run plugin
+        result = instance._run(terms, variables=variables, **kwargs)
+    except Exception as e:
+        errors = to_native(e)
+    return [result, errors]
+
+
 class AnsibleVMwareTurboMode:
     def __init__(self):
         self.sessions = collections.defaultdict(dict)
@@ -209,40 +244,61 @@ class AnsibleVMwareTurboMode:
         if not raw_data:
             return
 
-        (
-            ansiblez_path,
-            params,
-            env,
-        ) = json.loads(raw_data)
-        if self.debug_mode:
-            print(  # pylint: disable=ansible-bad-function
-                f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
+        (plugin_type, content) = pickle.loads(raw_data)
+
+        def _terminate(result):
+            writer.write(json.dumps(result).encode())
+            writer.close()
+            self._watcher = self.loop.create_task(self.ghost_killer())
+
+        if plugin_type == "module":
+            from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
+                EmbeddedModuleFailure,
             )
 
-        embedded_module = EmbeddedModule(ansiblez_path, params)
-        if self.debug_mode:
-            embedded_module.debug_mode = True
+            try:
+                (
+                    ansiblez_path,
+                    params,
+                    env,
+                ) = json.loads(content)
+                if self.debug_mode:
+                    print(  # pylint: disable=ansible-bad-function
+                        f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
+                    )
 
-        await embedded_module.load()
-        try:
-            os.environ.clear()
-            os.environ.update(env)
-            result = await embedded_module.run()
-        except SystemExit:
-            backtrace = traceback.format_exc()
-            result = {"msg": str(backtrace), "failed": True}
-        except EmbeddedModuleFailure as e:
-            result = {"msg": str(e), "failed": True}
-            if e.kwargs:
-                result.update(e.kwargs)
-        except Exception as e:
-            result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
+                embedded_module = EmbeddedModule(ansiblez_path, params)
+                if self.debug_mode:
+                    embedded_module.debug_mode = True
 
-        writer.write(json.dumps(result).encode())
-        writer.close()
-        self._watcher = self.loop.create_task(self.ghost_killer())
+                await embedded_module.load()
+                try:
+                    os.environ.clear()
+                    os.environ.update(env)
+                    result = await embedded_module.run()
+                except SystemExit:
+                    backtrace = traceback.format_exc()
+                    result = {"msg": str(backtrace), "failed": True}
+                except EmbeddedModuleFailure as e:
+                    result = {"msg": str(e), "failed": True}
+                    if e.kwargs:
+                        result.update(e.kwargs)
+                except Exception as e:
+                    result = {
+                        "msg": traceback.format_stack() + [str(e)],
+                        "failed": True,
+                    }
 
-        await embedded_module.unload()
+                _terminate(result)
+                await embedded_module.unload()
+            except Exception as e:
+                result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
+                _terminate(result)
+
+        elif plugin_type == "lookup":
+
+            result = run_lookup_plugin(content)
+            _terminate(result)
 
     def handle_exception(self, loop, context):
         e = context.get("exception")
