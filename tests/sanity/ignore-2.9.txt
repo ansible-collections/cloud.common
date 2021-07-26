@@ -53,6 +53,7 @@ plugins/lookup/turbo_demo.py compile-2.6!skip
 plugins/lookup/turbo_demo.py compile-2.7!skip
 plugins/lookup/turbo_demo.py compile-3.5!skip
 plugins/lookup/turbo_demo.py future-import-boilerplate!skip
+plugins/lookup/turbo_demo.py metaclass-boilerplate!skip
 plugins/module_utils/turbo/common.py compile-2.6!skip
 plugins/module_utils/turbo/common.py compile-2.7!skip
 plugins/module_utils/turbo/common.py compile-3.5!skip
