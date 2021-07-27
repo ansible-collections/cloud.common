@@ -18,6 +18,7 @@ from zipimport import zipimporter
 import pickle
 
 sys_path_lock = None
+env_lock = None
 
 import ansible.module_utils.basic
 
@@ -260,6 +261,7 @@ class AnsibleVMwareTurboMode:
                 (
                     ansiblez_path,
                     params,
+                    env,
                 ) = json.loads(content)
                 if self.debug_mode:
                     print(  # pylint: disable=ansible-bad-function
@@ -272,7 +274,10 @@ class AnsibleVMwareTurboMode:
 
                 await embedded_module.load()
                 try:
-                    result = await embedded_module.run()
+                    async with env_lock:
+                        os.environ.clear()
+                        os.environ.update(env)
+                        result = await embedded_module.run()
                 except SystemExit:
                     backtrace = traceback.format_exc()
                     result = {"msg": str(backtrace), "failed": True}
@@ -338,6 +343,7 @@ if __name__ == "__main__":
     if args.fork:
         fork_process()
     sys_path_lock = asyncio.Lock()
+    env_lock = asyncio.Lock()
 
     server = AnsibleVMwareTurboMode()
     server.socket_path = args.socket_path

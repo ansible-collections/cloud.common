@@ -104,6 +104,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             data = [
                 ansiblez_path,
                 json.dumps(args),
+                dict(os.environ),
             ]
             content = json.dumps(data).encode()
             result = turbo_socket.communicate(content)

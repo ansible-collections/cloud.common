@@ -31,3 +31,21 @@
 - assert:
     that:
       - _result_no_diff.diff is undefined
+
+- name: Test task environment var
+  cloud.common.turbo_demo:
+  environment:
+    TURBO_TEST_VAR: foobar
+  register: _result
+
+- assert:
+    that:
+      - _result.envvar == "foobar"
+
+- name: Test task environment var not set
+  cloud.common.turbo_demo:
+  register: _result
+
+- assert:
+    that:
+      - not _result.envvar
