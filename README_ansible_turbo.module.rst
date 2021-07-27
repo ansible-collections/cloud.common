@@ -147,6 +147,10 @@ You can raise ``EmbeddedModuleFailure`` exception yourself, for instance from a 
     Not only they are bad practice, but also may interface with this
     mechanism.
 
+How can I disable it by default?
+================================
+
+You can turn off the cache by default by adding a new `enable_session_cache` argument to your module. If the value is `False`, the turbo mode will be disabled.
 
 Troubleshooting
 ===============

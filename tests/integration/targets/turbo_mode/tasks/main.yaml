@@ -19,6 +19,16 @@
 - assert:
     that:
       - _result.results[-1].counter == 10
+- name: "Ensure we don't use the cache if enable_session_cache is false"
+  cloud.common.turbo_demo:
+    enable_session_cache: false
+  with_sequence: count=10
+  become: true
+  register: _result
+- assert:
+    that:
+      - _result.results[-1].counter == 1
+      - _result.results[-2].counter == 1
 - cloud.common.turbo_demo:
   diff: yes
   register: _result_with_diff
@@ -73,3 +83,13 @@
 - assert:
         that:
         - _result.counter > 1
+
+
+- name: Ensure we can disable the turbo mode
+  cloud.common.turbo_demo:
+    enable_session_cache: false
+  with_sequence: count=10
+  register: _result
+- assert:
+    that:
+      - _result.results[-1].counter == 1

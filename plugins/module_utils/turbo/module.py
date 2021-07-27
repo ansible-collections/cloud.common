@@ -29,14 +29,22 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     embedded_in_server = False
     collection_name = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, argument_spec=None, **kwargs):
+        if not argument_spec:
+            argument_spec = {}
         self.embedded_in_server = sys.argv[0].endswith("/server.py")
         self.collection_name = (
             AnsibleTurboModule.collection_name or get_collection_name_from_path()
         )
         ansible.module_utils.basic.AnsibleModule.__init__(
-            self, *args, bypass_checks=not self.embedded_in_server, **kwargs
+            self,
+            *args,
+            bypass_checks=not self.embedded_in_server,
+            argument_spec=argument_spec,
+            **kwargs,
         )
+        if "enable_session_cache" in self.params and not self.params["enable_session_cache"]:
+            return
         self._running = None
         if not self.embedded_in_server:
             self.run_on_daemon()

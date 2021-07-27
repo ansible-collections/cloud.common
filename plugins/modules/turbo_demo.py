@@ -13,6 +13,8 @@ description:
 - "This module is an example of an ansible_module.turbo integration"
 author:
 - Gonéri Le Bouder (@goneri)
+extends_documentation_fragment:
+- cloud.common.turbo_options
 """
 
 EXAMPLES = r"""
@@ -48,7 +50,14 @@ def run_module():
     # this includes instantiation, a couple of common attr would be the
     # args/params passed to the execution, as well as if the module
     # supports check mode
-    module = AnsibleModule(argument_spec={}, supports_check_mode=True)
+    argument_spec = {}
+    argument_spec["enable_session_cache"] = {
+        "type": "bool",
+        "default": True,
+        "required": False,
+    }
+
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
     module.collection_name = "cloud.common"
     previous_value = counter.i
     if not module.check_mode:
