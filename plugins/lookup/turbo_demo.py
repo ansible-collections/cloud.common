@@ -1,10 +1,6 @@
 # Copyright: (c) 2021, Aubin Bikouo (@abikouo)
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
 DOCUMENTATION = r"""
 lookup: turbo_demo
 author:
@@ -30,7 +26,7 @@ import os
 import sys
 import traceback
 
-from ansible_collections.cloud.common.plugins.module_utils.turbo.lookup import (
+from ansible_collections.cloud.common.plugins.plugin_utils.turbo.lookup import (
     TurboLookupBase as LookupBase,
 )
 
