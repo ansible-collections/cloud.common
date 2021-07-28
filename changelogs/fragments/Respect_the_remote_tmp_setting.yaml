@@ -1,0 +1,3 @@
+---
+bugfixes:
+- turbo - honor the ``remote_tmp`` configuration key.
