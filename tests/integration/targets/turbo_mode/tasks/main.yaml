@@ -49,3 +49,19 @@
 - assert:
     that:
       - not _result.envvar
+
+
+- name: Create temporary dir
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: temp
+  register: tempdir_1
+
+- name: Test with a different remote_tmp, there is no socket yet.
+  cloud.common.turbo_demo:
+  vars:
+    ansible_remote_tmp: "{{ tempdir_1.path }}"
+  register: _result
+- assert:
+    that:
+      - _result.counter == 1
