@@ -65,3 +65,11 @@
 - assert:
     that:
       - _result.counter == 1
+
+- name: test using default remote_tmp. socket previously created
+  cloud.common.turbo_demo:
+  register: _result
+
+- assert:
+        that:
+        - _result.counter > 1
