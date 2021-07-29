@@ -42,10 +42,10 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             self.run_on_daemon()
 
     def socket_path(self):
-        return (
-            os.environ["HOME"]
-            + f"/.ansible/tmp/turbo_mode.{self.collection_name}.socket"
-        )
+        from os.path import expanduser
+
+        abs_remote_tmp = expanduser(self._remote_tmp)
+        return abs_remote_tmp + f"/turbo_mode.{self.collection_name}.socket"
 
     def _get_argument_specs(self):
         """Returns a dict of accepted argument that includes the aliases"""
