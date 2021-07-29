@@ -77,3 +77,20 @@ releases:
     - py3.10-fix.yaml
     - socket-closure-fix.yaml
     release_date: '2021-06-22'
+  2.0.4:
+    changes:
+      bugfixes:
+      - add exception handler to main async loop (https://github.com/ansible-collections/cloud.common/pull/67).
+      - pass current task's environment through to execution (https://github.com/ansible-collections/cloud.common/pull/69).
+      - turbo - AnsibleTurboModule was missing some _ansible_facts variable like _diff,
+        _ansible_tmpdir. (https://github.com/ansible-collections/cloud.common/issues/65)
+      - turbo - honor the ``remote_tmp`` configuration key.
+      major_changes:
+      - turbo - enable turbo mode for lookup plugins
+    fragments:
+    - 67-add-exception-handler.yaml
+    - 69-pass-envvar.yaml
+    - Respect_the_remote_tmp_setting.yaml
+    - reading-common-variable.yaml
+    - turbo-for-lookup-plugin.yaml
+    release_date: '2021-07-29'

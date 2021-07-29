@@ -1,3 +1,0 @@
----
-bugfixes:
-  - pass current task's environment through to execution (https://github.com/ansible-collections/cloud.common/pull/69).

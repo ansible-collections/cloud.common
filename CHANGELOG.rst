@@ -5,6 +5,22 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.0.4
+======
+
+Major Changes
+-------------
+
+- turbo - enable turbo mode for lookup plugins
+
+Bugfixes
+--------
+
+- add exception handler to main async loop (https://github.com/ansible-collections/cloud.common/pull/67).
+- pass current task's environment through to execution (https://github.com/ansible-collections/cloud.common/pull/69).
+- turbo - AnsibleTurboModule was missing some _ansible_facts variable like _diff, _ansible_tmpdir. (https://github.com/ansible-collections/cloud.common/issues/65)
+- turbo - honor the ``remote_tmp`` configuration key.
+
 v2.0.3
 ======
 
