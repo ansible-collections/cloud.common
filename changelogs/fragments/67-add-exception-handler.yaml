@@ -1,3 +1,0 @@
----
-bugfixes:
-  - add exception handler to main async loop (https://github.com/ansible-collections/cloud.common/pull/67).
