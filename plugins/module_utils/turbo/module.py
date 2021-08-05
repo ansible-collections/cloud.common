@@ -1,15 +1,13 @@
 import json
 import os
-import socket
 import sys
-import time
 
 import ansible.module_utils.basic
 from .exceptions import (
     EmbeddedModuleSuccess,
     EmbeddedModuleFailure,
-    EmbeddedModuleUnexpectedFailure,
 )
+import ansible_collections.cloud.common.plugins.module_utils.turbo.common
 
 if False:  # pylint: disable=using-constant-test
     from .server import please_include_me
@@ -25,50 +23,6 @@ def get_collection_name_from_path():
     ansiblez = module_path.split("/")[-3]
     if ansiblez.startswith("ansible_") and ansiblez.endswith(".zip"):
         return ".".join(ansiblez[8:].split(".")[:2])
-
-
-def connect(socket_path):
-    running = False
-    _socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    for attempt in range(100, -1, -1):
-        try:
-            _socket.connect(socket_path)
-            return _socket
-        except (ConnectionRefusedError, FileNotFoundError):
-            if not running:
-                running = start_daemon(socket_path=socket_path)
-            if attempt == 0:
-                raise
-        time.sleep(0.01)
-
-
-def start_daemon(socket_path, ttl=None):
-    ansiblez_path = sys.path[0]
-    env = os.environ
-    env.update({"PYTHONPATH": ansiblez_path})
-    import subprocess
-
-    parameters = [
-        "--fork",
-        "--socket-path",
-        socket_path,
-    ]
-
-    if ttl:
-        parameters += ["--ttl", str(ttl)]
-
-    p = subprocess.Popen(
-        [
-            sys.executable,
-            "-m",
-            "ansible_collections.cloud.common.plugins.module_utils.turbo.server",
-        ]
-        + parameters,
-        env=env,
-        close_fds=True,
-    )
-    p.communicate()
-    return p.pid
 
 
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
@@ -88,10 +42,10 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             self.run_on_daemon()
 
     def socket_path(self):
-        return (
-            os.environ["HOME"]
-            + f"/.ansible/tmp/turbo_mode.{self.collection_name}.socket"
-        )
+        from os.path import expanduser
+
+        abs_remote_tmp = expanduser(self._remote_tmp)
+        return abs_remote_tmp + f"/turbo_mode.{self.collection_name}.socket"
 
     def _get_argument_specs(self):
         """Returns a dict of accepted argument that includes the aliases"""
@@ -140,30 +94,20 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         return args
 
     def run_on_daemon(self):
-        _socket = connect(socket_path=self.socket_path())
         result = dict(changed=False, original_message="", message="")
-        ansiblez_path = sys.path[0]
-        args = self._prepare_args()
-        data = [
-            ansiblez_path,
-            json.dumps(args),
-        ]
-        _socket.sendall(json.dumps(data).encode())
-        _socket.shutdown(socket.SHUT_WR)
-        raw_answer = b""
-        while True:
-            b = _socket.recv((1024 * 1024))
-            if not b:
-                break
-            raw_answer += b
-            time.sleep(0.01)
-        _socket.close()
-        try:
-            result = json.loads(raw_answer.decode())
-        except json.decoder.JSONDecodeError:
-            raise EmbeddedModuleUnexpectedFailure(
-                f"Cannot decode module answer: {raw_answer}"
-            )
+        ttl = os.environ.get("ANSIBLE_TURBO_LOOKUP_TTL", None)
+        with ansible_collections.cloud.common.plugins.module_utils.turbo.common.connect(
+            socket_path=self.socket_path(), ttl=ttl
+        ) as turbo_socket:
+            ansiblez_path = sys.path[0]
+            args = self._prepare_args()
+            data = [
+                ansiblez_path,
+                json.dumps(args),
+                dict(os.environ),
+            ]
+            content = json.dumps(data).encode()
+            result = turbo_socket.communicate(content)
         self.exit_json(**result)
 
     def exit_json(self, **kwargs):
