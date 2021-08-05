@@ -44,3 +44,5 @@ plugins/module_utils/turbo/common.py import-2.6!skip
 plugins/module_utils/turbo/common.py import-2.7!skip
 plugins/module_utils/turbo/common.py import-3.5!skip
 plugins/module_utils/turbo/common.py metaclass-boilerplate!skip
+plugins/modules/turbo_demo.py validate-modules!skip
+plugins/modules/turbo_fail.py validate-modules!skip
