@@ -222,7 +222,6 @@ async def run_as_lookup_plugin(data):
 
         if not hasattr(instance, "_run"):
             return [None, "No _run() found"]
-        result = [inspect.iscoroutinefunction(instance._run)]
         if inspect.iscoroutinefunction(instance._run):
             result = await instance._run(terms, variables=variables, **kwargs)
         else:
