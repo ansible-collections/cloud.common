@@ -41,25 +41,28 @@ if True:  # pylint: disable=using-constant-test
     counter.i = 0
 
 
+async def execute(terms, variables, playbook_vars):
+    result = []
+    result.append("running from pid: {pid}".format(pid=os.getpid()))
+    if playbook_vars is not None:
+        result += [
+            variables["vars"].get(x) for x in playbook_vars if x in variables["vars"]
+        ]
+    if terms:
+        result += terms
+
+    for id, stack in list(sys._current_frames().items()):
+        for fname, line_id, name, line in traceback.extract_stack(stack):
+            if fname == __file__:
+                continue
+
+    result.append("turbo_demo_counter: {0}".format(counter()))
+    return result
+
+
 class LookupModule(LookupBase):
-    def _run(self, terms, variables=None, playbook_vars=None):
-        result = []
-        result.append("running from pid: {pid}".format(pid=os.getpid()))
-        if playbook_vars is not None:
-            result += [
-                variables["vars"].get(x)
-                for x in playbook_vars
-                if x in variables["vars"]
-            ]
-        if terms:
-            result += terms
-
-        for id, stack in list(sys._current_frames().items()):
-            for fname, line_id, name, line in traceback.extract_stack(stack):
-                if fname == __file__:
-                    continue
-
-        result.append("turbo_demo_counter: {0}".format(counter()))
+    async def _run(self, terms, variables=None, playbook_vars=None):
+        result = await execute(terms, variables, playbook_vars)
         return result
 
     run = _run if not hasattr(LookupBase, "run_on_daemon") else LookupBase.run_on_daemon

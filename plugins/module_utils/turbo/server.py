@@ -192,7 +192,7 @@ class EmbeddedModule:
             )
 
 
-def run_lookup_plugin(data):
+async def run_as_lookup_plugin(data):
     errors = None
     try:
         import ansible.plugins.loader as plugin_loader
@@ -220,11 +220,59 @@ def run_lookup_plugin(data):
             name=lookup_name, loader=templar._loader, templar=templar
         )
 
-        # run plugin
-        result = instance._run(terms, variables=variables, **kwargs)
+        if not hasattr(instance, "_run"):
+            return [None, "No _run() found"]
+        if inspect.iscoroutinefunction(instance._run):
+            result = await instance._run(terms, variables=variables, **kwargs)
+        else:
+            result = instance._run(terms, variables=variables, **kwargs)
     except Exception as e:
         errors = to_native(e)
     return [result, errors]
+
+
+async def run_as_module(content, debug_mode):
+    from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
+        EmbeddedModuleFailure,
+    )
+
+    try:
+        (
+            ansiblez_path,
+            params,
+            env,
+        ) = json.loads(content)
+        if debug_mode:
+            print(  # pylint: disable=ansible-bad-function
+                f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
+            )
+
+        embedded_module = EmbeddedModule(ansiblez_path, params)
+        if debug_mode:
+            embedded_module.debug_mode = True
+
+        await embedded_module.load()
+        try:
+            async with env_lock:
+                os.environ.clear()
+                os.environ.update(env)
+                result = await embedded_module.run()
+        except SystemExit:
+            backtrace = traceback.format_exc()
+            result = {"msg": str(backtrace), "failed": True}
+        except EmbeddedModuleFailure as e:
+            result = {"msg": str(e), "failed": True}
+            if e.kwargs:
+                result.update(e.kwargs)
+        except Exception as e:
+            result = {
+                "msg": traceback.format_stack() + [str(e)],
+                "failed": True,
+            }
+        await embedded_module.unload()
+    except Exception as e:
+        result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
+    return result
 
 
 class AnsibleVMwareTurboMode:
@@ -253,54 +301,10 @@ class AnsibleVMwareTurboMode:
             self._watcher = self.loop.create_task(self.ghost_killer())
 
         if plugin_type == "module":
-            from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
-                EmbeddedModuleFailure,
-            )
-
-            try:
-                (
-                    ansiblez_path,
-                    params,
-                    env,
-                ) = json.loads(content)
-                if self.debug_mode:
-                    print(  # pylint: disable=ansible-bad-function
-                        f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
-                    )
-
-                embedded_module = EmbeddedModule(ansiblez_path, params)
-                if self.debug_mode:
-                    embedded_module.debug_mode = True
-
-                await embedded_module.load()
-                try:
-                    async with env_lock:
-                        os.environ.clear()
-                        os.environ.update(env)
-                        result = await embedded_module.run()
-                except SystemExit:
-                    backtrace = traceback.format_exc()
-                    result = {"msg": str(backtrace), "failed": True}
-                except EmbeddedModuleFailure as e:
-                    result = {"msg": str(e), "failed": True}
-                    if e.kwargs:
-                        result.update(e.kwargs)
-                except Exception as e:
-                    result = {
-                        "msg": traceback.format_stack() + [str(e)],
-                        "failed": True,
-                    }
-
-                _terminate(result)
-                await embedded_module.unload()
-            except Exception as e:
-                result = {"msg": traceback.format_stack() + [str(e)], "failed": True}
-                _terminate(result)
-
+            result = await run_as_module(content, debug_mode=self.debug_mode)
         elif plugin_type == "lookup":
-
-            result = run_lookup_plugin(content)
-            _terminate(result)
+            result = await run_as_lookup_plugin(content)
+        _terminate(result)
 
     def handle_exception(self, loop, context):
         e = context.get("exception")
