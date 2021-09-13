@@ -25,6 +25,47 @@ def get_collection_name_from_path():
         return ".".join(ansiblez[8:].split(".")[:2])
 
 
+def expand_argument_specs_aliases(argument_spec):
+    """Returns a dict of accepted argument that includes the aliases"""
+    expanded_argument_specs = {}
+    for k, v in argument_spec.items():
+        for alias in [k] + v.get("aliases", []):
+            expanded_argument_specs[alias] = v
+    return expanded_argument_specs
+
+
+def prepare_args(argument_specs, params):
+    """Take argument_spec and the user params and prepare the final argument structure."""
+
+    def _keep_value(v, argument_specs, key, subkey=None):
+        if v is None:  # cannot be a valide parameter
+            return False
+        if key not in argument_specs:  # should never happen
+            return
+        if not subkey:  # level 1 parameter
+            return v != argument_specs[key].get("default")
+        elif subkey not in argument_specs[key]:  # Freeform
+            return True
+        elif isinstance(argument_specs[key][subkey], dict):
+            return v != argument_specs[key][subkey].get("default")
+        else:  # should never happen
+            return True
+
+    new_params = {}
+    for k, v in params.items():
+        if not _keep_value(v, argument_specs, k):
+            continue
+
+        if isinstance(v, dict):
+            new_params[k] = {
+                i: j for i, j in v.items() if _keep_value(j, argument_specs, k, i)
+            }
+        else:
+            new_params[k] = v
+    args = {"ANSIBLE_MODULE_ARGS": new_params}
+    return args
+
+
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     embedded_in_server = False
     collection_name = None
@@ -47,43 +88,9 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         abs_remote_tmp = expanduser(self._remote_tmp)
         return abs_remote_tmp + f"/turbo_mode.{self.collection_name}.socket"
 
-    def _get_argument_specs(self):
-        """Returns a dict of accepted argument that includes the aliases"""
-        argument_specs = {}
-        for k, v in self.argument_spec.items():
-            for alias in [k] + v.get("aliases", []):
-                argument_specs[alias] = v
-        return argument_specs
-
-    def _prepare_args(self):
-        argument_specs = self._get_argument_specs()
-
-        def _keep_value(v, argument_specs, key, subkey=None):
-            if v is None:  # cannot be a valide parameter
-                return False
-            if key not in argument_specs:  # should never happen
-                return
-            if not subkey:  # level 1 parameter
-                return v != argument_specs[key].get("default")
-            elif subkey not in argument_specs[key]:  # Freeform
-                return True
-            elif isinstance(argument_specs[key][subkey], dict):
-                return v != argument_specs[key][subkey].get("default")
-            else:  # should never happen
-                return True
-
-        new_params = {}
-        for k, v in self.params.items():
-            if not _keep_value(v, argument_specs, k):
-                continue
-
-            if isinstance(v, dict):
-                new_params[k] = {
-                    i: j for i, j in v.items() if _keep_value(j, argument_specs, k, i)
-                }
-            else:
-                new_params[k] = v
-        args = {"ANSIBLE_MODULE_ARGS": new_params}
+    def init_args(self):
+        argument_specs = expand_argument_specs_aliases(self.argument_spec)
+        args = prepare_args(argument_specs, self.params)
         for k in ansible.module_utils.basic.PASS_VARS:
             attribute = ansible.module_utils.basic.PASS_VARS[k][0]
             if not hasattr(self, attribute):
@@ -100,7 +107,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             socket_path=self.socket_path(), ttl=ttl
         ) as turbo_socket:
             ansiblez_path = sys.path[0]
-            args = self._prepare_args()
+            args = self.init_args()
             data = [
                 ansiblez_path,
                 json.dumps(args),

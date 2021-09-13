@@ -14,6 +14,8 @@ import os
 import ansible.module_utils.basic
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     get_collection_name_from_path,
+    expand_argument_specs_aliases,
+    prepare_args,
 )
 import ansible_collections.cloud.common.plugins.module_utils.turbo.common as turbo_common
 
@@ -92,3 +94,35 @@ def test_connect(monkeypatch):
     turbo_socket = turbo_common.AnsibleTurboSocket(socket_path="/nowhere")
     assert turbo_socket.bind()
     mocked_socket.connect_assert_called_once_with("/nowhere")
+
+
+def test_expand_argument_specs_aliases():
+    argspec = {"foo": {"type": int, "aliases": ["bar"]}}
+    assert expand_argument_specs_aliases(argspec) == {
+        "foo": {"type": int, "aliases": ["bar"]},
+        "bar": {"type": int, "aliases": ["bar"]},
+    }
+
+
+def test_prepare_args():
+    argspec = {"foo": {"type": int}}
+    params = {"foo": 1}
+    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+
+
+def test_prepare_args_ignore_none():
+    argspec = {"foo": {"type": int}}
+    params = {"foo": None}
+    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {}}
+
+
+def test_prepare_args_subkey_freeform():
+    argspec = {"foo": {"type": dict, "default": {}}}
+    params = {"foo": {"bar": 1}}
+    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": {"bar": 1}}}
+
+
+def test_prepare_args_subkey_with_default():
+    argspec = {"foo": {"bar": {"default": 1}}}
+    params = {"foo": {"bar": 1}}
+    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": {}}}
