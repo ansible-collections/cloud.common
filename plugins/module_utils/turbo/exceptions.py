@@ -34,3 +34,7 @@ class EmbeddedModuleUnexpectedFailure(Exception):
 class EmbeddedModuleSuccess(Exception):
     def __init__(self, **kwargs):
         self.kwargs = kwargs
+
+
+class TooManyLoadedModules(EmbeddedModuleUnexpectedFailure):
+    pass
