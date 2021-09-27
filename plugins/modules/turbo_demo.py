@@ -10,7 +10,7 @@ module: turbo_demo
 short_description: A demo module for ansible_module.turbo
 version_added: "1.0.0"
 description:
-- "This module is an example of an ansible_module.turbo integration"
+- "This module is an example of an ansible_module.turbo integration."
 author:
 - Gonéri Le Bouder (@goneri)
 """
