@@ -17,7 +17,7 @@ author:
 
 EXAMPLES = r"""
 - name: Run the module
-  turbo_demo:
+  cloud.common.turbo_demo:
 """
 
 import os
