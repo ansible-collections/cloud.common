@@ -1,3 +1,6 @@
+import os
+import psutil
+import gc
 import argparse
 import asyncio
 import importlib
@@ -166,6 +169,10 @@ class EmbeddedModule:
         sys.argv = sys.argv[:1]
         ansible.module_utils.basic._ANSIBLE_ARGS = None
         pr = self.create_profiler()
+        process = psutil.Process(os.getpid())
+        mem = int(process.memory_info().rss / (1023*1024))
+        with open("/tmp/turbo.memory.log", "a+") as fd_mem:
+            fd_mem.write(f"- {self.module_name}\n  count:{gc.get_count()}\n  stats:{gc.get_stats()}\n   -> {mem}MB\n")
         if not hasattr(self.module_class, "main"):
             raise EmbeddedModuleFailure("No main() found!")
         try:
