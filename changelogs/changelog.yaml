@@ -94,3 +94,15 @@ releases:
     - reading-common-variable.yaml
     - turbo-for-lookup-plugin.yaml
     release_date: '2021-07-29'
+  2.1.0:
+    changes:
+      minor_changes:
+      - Cosmetic changes in the documentation for the inclusion in the Ansible collection.
+      - turbo - Extend the unit-test coverage.
+      - turbo - Use a BSD license for the module_utils and plugin_utils files.
+      - turbo - add support for coroutine for lookup plugins (https://github.com/ansible-collections/cloud.common/pull/75).
+    fragments:
+    - 0-copy_ignore_txt.yml
+    - 75-lookup-add-support-for-coroutine.yaml
+    - cosmetic_changes.yaml
+    release_date: '2021-10-07'
