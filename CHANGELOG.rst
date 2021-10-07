@@ -5,6 +5,17 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.1.0
+======
+
+Minor Changes
+-------------
+
+- Cosmetic changes in the documentation for the inclusion in the Ansible collection.
+- turbo - Extend the unit-test coverage.
+- turbo - Use a BSD license for the module_utils and plugin_utils files.
+- turbo - add support for coroutine for lookup plugins (https://github.com/ansible-collections/cloud.common/pull/75).
+
 v2.0.4
 ======
 

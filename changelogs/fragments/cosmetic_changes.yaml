@@ -1,6 +1,0 @@
----
-minor_changes:
-- "turbo - Add co-routine support to lookup plugins."
-- "turbo - Use a BSD license for the module_utils and plugin_utils files."
-- "turbo - Extend the unit-test coverage."
-- "Cosmetic changes in the documentation for the inclusion in the Ansible collection."
