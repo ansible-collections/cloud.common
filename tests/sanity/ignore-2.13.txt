@@ -35,3 +35,7 @@ plugins/module_utils/turbo/common.py import-3.5!skip
 plugins/module_utils/turbo/common.py metaclass-boilerplate!skip
 plugins/modules/turbo_demo.py validate-modules!skip
 plugins/modules/turbo_fail.py validate-modules!skip
+tests/unit/plugins/module_utils/turbo/conftest.py future-import-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/conftest.py metaclass-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/test_module.py future-import-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/test_module.py metaclass-boilerplate!skip

@@ -62,3 +62,7 @@ plugins/module_utils/turbo/common.py import-2.6!skip
 plugins/module_utils/turbo/common.py import-2.7!skip
 plugins/module_utils/turbo/common.py import-3.5!skip
 plugins/module_utils/turbo/common.py metaclass-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/conftest.py future-import-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/conftest.py metaclass-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/test_module.py future-import-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/test_module.py metaclass-boilerplate!skip
