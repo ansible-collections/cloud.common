@@ -78,16 +78,9 @@ def prepare_args(argument_specs, params):
         else:  # should never happen
             return True
 
-    def _is_an_alias(k):
-        aliases = argument_specs[k].get("aliases")
-        return aliases and k != aliases[0]
-
     new_params = {}
     for k, v in params.items():
         if not _keep_value(v, argument_specs, k):
-            continue
-
-        if _is_an_alias(k):
             continue
 
         if isinstance(v, dict):
