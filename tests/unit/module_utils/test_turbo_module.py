@@ -131,7 +131,14 @@ def test_prepare_args_subkey_with_default():
 def test_prepare_args_dedup_aliases():
     argspec = {
         "foo": {"aliases": ["bar"], "type": int},
-        "bar": {"aliases": ["bar"], "type": int},
     }
     params = {"foo": 1, "bar": 1}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"bar": 1}}
+    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+
+
+def test_prepare_args_with_aliases():
+    argspec = {
+        "foo": {"aliases": ["bar"], "type": int}
+    }
+    params = {"foo": 1}
+    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
