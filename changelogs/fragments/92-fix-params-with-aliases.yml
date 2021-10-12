@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - fix parameters with aliases not being passed through (https://github.com/ansible-collections/cloud.common/issues/91).

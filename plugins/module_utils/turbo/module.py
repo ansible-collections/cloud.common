@@ -80,7 +80,7 @@ def prepare_args(argument_specs, params):
 
     def _is_an_alias(k):
         aliases = argument_specs[k].get("aliases")
-        return aliases and k != aliases[0]
+        return aliases and k in aliases
 
     new_params = {}
     for k, v in params.items():
