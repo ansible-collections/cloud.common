@@ -27,7 +27,9 @@
 #
 import json
 import os
+import os.path
 import sys
+import tempfile
 
 import ansible.module_utils.basic
 from .exceptions import (
@@ -117,10 +119,11 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             self.run_on_daemon()
 
     def socket_path(self):
-        from os.path import expanduser
-
-        abs_remote_tmp = expanduser(self._remote_tmp)
-        return abs_remote_tmp + f"/turbo_mode.{self.collection_name}.socket"
+        if self._remote_tmp is None:
+            abs_remote_tmp = tempfile.gettempdir()
+        else:
+            abs_remote_tmp = os.path.expanduser(os.path.expandvars(self._remote_tmp))
+        return os.path.join(abs_remote_tmp, f"turbo_mode.{self.collection_name}.socket")
 
     def init_args(self):
         argument_specs = expand_argument_specs_aliases(self.argument_spec)
