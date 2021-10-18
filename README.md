@@ -45,3 +45,5 @@ If you encounter abusive behavior violating the [Ansible Code of Conduct](https:
 GNU General Public License v3.0 or later.
 
 See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
+
+The files in plugins/module_utils and plugins/plugin_utils directories are also licensed with a BSD license.
