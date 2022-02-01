@@ -127,7 +127,7 @@ class EmbeddedModule:
 
             # resettle the loaded modules that were associated
             # with a different Ansiblez.
-            for path, module in tuple(sys.modules.items()):
+            for path, module in sorted(tuple(sys.modules.items())):
                 if path and module and path.startswith("ansible_collections"):
                     try:
                         prefix = sys.modules[path].__loader__.prefix
