@@ -127,30 +127,29 @@ class EmbeddedModule:
 
             # resettle the loaded modules that were associated
             # with a different Ansiblez.
-            for path, module in tuple(sys.modules.items()):
+            for path, module in sorted(tuple(sys.modules.items())):
                 if path and module and path.startswith("ansible_collections"):
                     try:
                         prefix = sys.modules[path].__loader__.prefix
                     except AttributeError:
                         # Not from a zipimporter loader, skipping
                         continue
-                    py_path = self.ansiblez_path + os.sep + prefix
-                    my_loader = zipimporter(py_path)
-                    sys.meta_path.append(my_loader)
+                    # Reload package modules only, to pick up new modules from
+                    # packages that have been previously loaded.
                     if hasattr(sys.modules[path], "__path__"):
-                        sys.modules[path].__path__ = py_path
-
+                        py_path = self.ansiblez_path + os.sep + prefix
+                        my_loader = zipimporter(py_path)
+                        sys.modules[path].__loader__ = my_loader
+                        try:
+                            importlib.reload(sys.modules[path])
+                        except ModuleNotFoundError:
+                            pass
             # Finally, load the plugin class.
             self.module_class = importlib.import_module(self.module_path)
 
     async def unload(self):
         async with sys_path_lock:
             sys.path = [i for i in sys.path if i != self.ansiblez_path]
-            sys.meta_path = [
-                i
-                for i in sys.meta_path
-                if not (isinstance(i, zipimporter) and i.archive == self.ansiblez_path)
-            ]
 
     def create_profiler(self):
         if self.debug_mode:

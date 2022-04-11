@@ -1,3 +1,5 @@
+- cloud.common.turbo_import:
+
 - cloud.common.turbo_demo:
   with_sequence: count=10
   register: _result

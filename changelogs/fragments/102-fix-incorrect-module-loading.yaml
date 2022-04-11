@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - fix turbo mode loading incorrect module (https://github.com/ansible-collections/cloud.common/pull/102).

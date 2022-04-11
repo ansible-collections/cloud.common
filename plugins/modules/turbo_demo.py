@@ -65,6 +65,8 @@ def run_module():
 
 
 def main():
+    from ansible_collections.cloud.common.plugins.module_utils import turbo_demo
+
     run_module()
 
 

@@ -74,3 +74,11 @@ tests/unit/plugins/module_utils/turbo/conftest.py future-import-boilerplate!skip
 tests/unit/plugins/module_utils/turbo/conftest.py metaclass-boilerplate!skip
 tests/unit/plugins/module_utils/turbo/test_module.py future-import-boilerplate!skip
 tests/unit/plugins/module_utils/turbo/test_module.py metaclass-boilerplate!skip
+plugins/modules/turbo_import.py compile-2.6!skip
+plugins/modules/turbo_import.py compile-2.7!skip
+plugins/modules/turbo_import.py compile-3.5!skip
+plugins/modules/turbo_import.py future-import-boilerplate!skip
+plugins/modules/turbo_import.py import-2.6!skip
+plugins/modules/turbo_import.py import-2.7!skip
+plugins/modules/turbo_import.py import-3.5!skip
+plugins/modules/turbo_import.py metaclass-boilerplate!skip
