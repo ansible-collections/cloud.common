@@ -5,6 +5,21 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.1.1
+======
+
+Minor Changes
+-------------
+
+- Move the content of README_ansible_turbo.module.rst in the main README.md to get visibility on Ansible Galaxy.
+
+Bugfixes
+--------
+
+- fix parameters with aliases not being passed through (https://github.com/ansible-collections/cloud.common/issues/91).
+- fix turbo mode loading incorrect module (https://github.com/ansible-collections/cloud.common/pull/102).
+- turbo - Ensure we don't call the module with duplicated aliased parameters.
+
 v2.1.0
 ======
 
