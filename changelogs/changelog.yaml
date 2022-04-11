@@ -106,3 +106,19 @@ releases:
     - 75-lookup-add-support-for-coroutine.yaml
     - cosmetic_changes.yaml
     release_date: '2021-10-07'
+  2.1.1:
+    changes:
+      bugfixes:
+      - fix parameters with aliases not being passed through (https://github.com/ansible-collections/cloud.common/issues/91).
+      - fix turbo mode loading incorrect module (https://github.com/ansible-collections/cloud.common/pull/102).
+      - turbo - Ensure we don't call the module with duplicated aliased parameters.
+      minor_changes:
+      - Move the content of README_ansible_turbo.module.rst in the main README.md
+        to get visibility on Ansible Galaxy.
+    fragments:
+    - 0-ignore.yml
+    - 102-fix-incorrect-module-loading.yaml
+    - 92-fix-params-with-aliases.yml
+    - remove_README_ansible_turbo.module.rst.yaml
+    - remove_aliased_parameters.yaml
+    release_date: '2022-04-11'

@@ -1,3 +1,0 @@
----
-minor_changes:
-- Move the content of README_ansible_turbo.module.rst in the main README.md to get visibility on Ansible Galaxy.
