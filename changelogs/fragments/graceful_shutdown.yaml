@@ -1,0 +1,3 @@
+---
+bugfixes:
+- "Ensure we don't shutdown the server when we've still got some ongoing tasks (https://github.com/ansible-collections/cloud.common/pull/109)."
