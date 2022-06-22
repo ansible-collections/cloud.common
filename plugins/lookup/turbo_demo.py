@@ -2,7 +2,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 DOCUMENTATION = r"""
-lookup: turbo_demo
+name: turbo_demo
 author:
   - Aubin Bikouo (@abikouo)
 
@@ -13,6 +13,7 @@ options:
   playbook_vars:
     description: list of playbook variables to add in the output.
     type: list
+    elements: str
 """
 
 EXAMPLES = r"""
