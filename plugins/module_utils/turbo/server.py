@@ -307,14 +307,21 @@ class AnsibleVMwareTurboMode:
         self.socket_path = None
         self.ttl = None
         self.debug_mode = None
+        self.jobs_started = 0
+        self.jobs_done = 0
 
     async def ghost_killer(self):
-        await asyncio.sleep(self.ttl)
-        self.stop()
+        while True:
+            w1 = self.jobs_started
+            await asyncio.sleep(self.ttl)
+            if w1 != self.jobs_started:
+                continue
+            if self.jobs_done < self.jobs_started:
+                continue
+            self.stop()
 
     async def handle(self, reader, writer):
-        self._watcher.cancel()
-
+        self.jobs_started += 1
         raw_data = await reader.read()
         if not raw_data:
             return
@@ -324,7 +331,7 @@ class AnsibleVMwareTurboMode:
         def _terminate(result):
             writer.write(json.dumps(result).encode())
             writer.close()
-            self._watcher = self.loop.create_task(self.ghost_killer())
+            self.jobs_done += 1
 
         if plugin_type == "module":
             result = await run_as_module(content, debug_mode=self.debug_mode)

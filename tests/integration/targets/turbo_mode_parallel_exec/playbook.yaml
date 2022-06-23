@@ -1,0 +1,33 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - cloud.common.turbo_demo:
+    - pause:
+        seconds: 5
+
+- hosts: all
+  strategy: free
+  gather_facts: no
+  tasks:
+    - cloud.common.turbo_demo:
+      with_sequence: count=10
+    - cloud.common.turbo_demo:
+      with_sequence: count=10
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - cloud.common.turbo_demo:
+      register: _result
+    - debug: var=_result
+    - assert:
+        that:
+          - _result.counter == 1002
+    - pause:
+        seconds: 35
+    - cloud.common.turbo_demo:
+      register: _result
+    - debug: var=_result
+    - assert:
+        that:
+          - _result.counter == 1
