@@ -27,6 +27,7 @@
 #
 import argparse
 import asyncio
+from datetime import datetime
 import importlib
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
@@ -43,6 +44,7 @@ import traceback
 import zipfile
 from zipimport import zipimporter
 import pickle
+import uuid
 
 sys_path_lock = None
 env_lock = None
@@ -307,21 +309,25 @@ class AnsibleVMwareTurboMode:
         self.socket_path = None
         self.ttl = None
         self.debug_mode = None
-        self.jobs_started = 0
-        self.jobs_done = 0
+        self.jobs_ongoing = {}
 
     async def ghost_killer(self):
         while True:
-            w1 = self.jobs_started
             await asyncio.sleep(self.ttl)
-            if w1 != self.jobs_started:
-                continue
-            if self.jobs_done < self.jobs_started:
+            running_jobs = {
+                job_id: start_date
+                for job_id, start_date in self.jobs_ongoing.items()
+                if (datetime.now() - start_date).total_seconds() < 3600
+            }
+            if running_jobs:
                 continue
             self.stop()
 
     async def handle(self, reader, writer):
-        self.jobs_started += 1
+        self._watcher.cancel()
+        self._watcher = self.loop.create_task(self.ghost_killer())
+        job_id = str(uuid.uuid4())
+        self.jobs_ongoing[job_id] = datetime.now()
         raw_data = await reader.read()
         if not raw_data:
             return
@@ -331,13 +337,13 @@ class AnsibleVMwareTurboMode:
         def _terminate(result):
             writer.write(json.dumps(result).encode())
             writer.close()
-            self.jobs_done += 1
 
         if plugin_type == "module":
             result = await run_as_module(content, debug_mode=self.debug_mode)
         elif plugin_type == "lookup":
             result = await run_as_lookup_plugin(content)
         _terminate(result)
+        del self.jobs_ongoing[job_id]
 
     def handle_exception(self, loop, context):
         e = context.get("exception")
