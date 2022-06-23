@@ -28,7 +28,6 @@
 import os
 
 from ansible.plugins.lookup import LookupBase
-from ansible.module_utils.six import string_types
 import ansible_collections.cloud.common.plugins.module_utils.turbo.common
 from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
     EmbeddedModuleUnexpectedFailure,
@@ -44,7 +43,7 @@ def get_server_ttl(variables):
     for env_var in variables.get("environment", []):
         value = env_var.get("ANSIBLE_TURBO_LOOKUP_TTL", None)
         test_var_int = [
-            isinstance(value, string_types) and value.isnumeric(),
+            isinstance(value, str) and value.isnumeric(),
             isinstance(value, int),
         ]
         if value is not None and any(test_var_int):
