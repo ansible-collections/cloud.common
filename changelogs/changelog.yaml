@@ -122,3 +122,11 @@ releases:
     - remove_README_ansible_turbo.module.rst.yaml
     - remove_aliased_parameters.yaml
     release_date: '2022-04-11'
+  2.1.2:
+    changes:
+      bugfixes:
+      - Ensure we don't shutdown the server when we've still got some ongoing tasks
+        (https://github.com/ansible-collections/cloud.common/pull/109).
+    fragments:
+    - graceful_shutdown.yaml
+    release_date: '2022-06-23'
