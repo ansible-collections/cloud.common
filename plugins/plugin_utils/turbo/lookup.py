@@ -74,17 +74,18 @@ class TurboLookupBase(LookupBase):
                 idx = name.find(lookup_plugins)
                 if idx != -1:
                     name = name[:idx]
+
             self.__socket_path = os.environ[
                 "HOME"
             ] + "/.ansible/tmp/turbo_lookup.{0}.socket".format(name)
         return self.__socket_path
 
     def execute(self, terms, variables=None, **kwargs):
+        result = None
         with ansible_collections.cloud.common.plugins.module_utils.turbo.common.connect(
             socket_path=self.socket_path, ttl=self._ttl, plugin="lookup"
         ) as turbo_socket:
             content = (self._load_name, terms, variables, kwargs)
-            (result, errors) = turbo_socket.communicate(content)
-            if errors:
-                raise EmbeddedModuleUnexpectedFailure(errors)
+            result = turbo_socket.communicate(content)
+
             return result

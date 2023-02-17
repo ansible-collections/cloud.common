@@ -51,6 +51,7 @@ env_lock = None
 
 import ansible.module_utils.basic
 
+
 please_include_me = "bar"
 
 
@@ -224,6 +225,7 @@ async def run_as_lookup_plugin(data):
     errors = None
     from ansible.module_utils._text import to_native
 
+    result = None
     try:
         import ansible.plugins.loader as plugin_loader
         from ansible.parsing.dataloader import DataLoader
@@ -257,10 +259,12 @@ async def run_as_lookup_plugin(data):
             result = instance._run(terms, variables=variables, **kwargs)
     except Exception as e:
         errors = to_native(e)
+
     return [result, errors]
 
 
 async def run_as_module(content, debug_mode):
+    result = None
     from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
         EmbeddedModuleFailure,
     )
@@ -325,11 +329,13 @@ class AnsibleVMwareTurboMode:
             self.stop()
 
     async def handle(self, reader, writer):
+        result = None
         self._watcher.cancel()
         self._watcher = self.loop.create_task(self.ghost_killer())
         job_id = str(uuid.uuid4())
         self.jobs_ongoing[job_id] = datetime.now()
         raw_data = await reader.read()
+
         if not raw_data:
             return
 
@@ -342,7 +348,8 @@ class AnsibleVMwareTurboMode:
         if plugin_type == "module":
             result = await run_as_module(content, debug_mode=self.debug_mode)
         elif plugin_type == "lookup":
-            result = await run_as_lookup_plugin(content)
+            _result = await run_as_lookup_plugin(content)
+            result = list(filter(lambda x: x is not None, _result))
         _terminate(result)
         del self.jobs_ongoing[job_id]
 
