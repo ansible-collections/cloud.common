@@ -1,5 +1,5 @@
 - hosts: localhost
-  gather_facts: no
+  gather_facts: false
   tasks:
     - cloud.common.turbo_demo:
     - pause:
@@ -7,7 +7,7 @@
 
 - hosts: all
   strategy: free
-  gather_facts: no
+  gather_facts: false
   tasks:
     - cloud.common.turbo_demo:
       with_sequence: count=10
@@ -15,7 +15,7 @@
       with_sequence: count=10
 
 - hosts: localhost
-  gather_facts: no
+  gather_facts: false
   tasks:
     - cloud.common.turbo_demo:
       register: _result

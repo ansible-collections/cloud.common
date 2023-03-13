@@ -1,5 +1,5 @@
 - hosts: localhost
-  gather_facts: no
+  gather_facts: false
 
   environment:
     ANSIBLE_TURBO_LOOKUP_TTL: 1
@@ -45,7 +45,7 @@
 
 
 - hosts: localhost
-  gather_facts: no
+  gather_facts: false
 
   vars:
     turbo_play_var: "simple ansible playbook variable"

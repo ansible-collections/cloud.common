@@ -22,13 +22,13 @@
     that:
       - _result.results[-1].counter == 10
 - cloud.common.turbo_demo:
-  diff: yes
+  diff: true
   register: _result_with_diff
 - assert:
     that:
       - _result_with_diff.diff is defined
 - cloud.common.turbo_demo:
-  diff: no
+  diff: false
   register: _result_no_diff
 - assert:
     that:
