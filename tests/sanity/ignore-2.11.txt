@@ -28,11 +28,11 @@ plugins/modules/turbo_demo.py import-2.6!skip
 plugins/modules/turbo_demo.py import-2.7!skip
 plugins/modules/turbo_demo.py import-3.5!skip
 plugins/modules/turbo_demo.py metaclass-boilerplate!skip
-tests/unit/module_utils/test_turbo_module.py compile-2.6!skip
-tests/unit/module_utils/test_turbo_module.py compile-2.7!skip
-tests/unit/module_utils/test_turbo_module.py compile-3.5!skip
-tests/unit/module_utils/test_turbo_module.py future-import-boilerplate!skip
-tests/unit/module_utils/test_turbo_module.py metaclass-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/test_turbo_module.py compile-2.6!skip
+tests/unit/plugins/module_utils/turbo/test_turbo_module.py compile-2.7!skip
+tests/unit/plugins/module_utils/turbo/test_turbo_module.py compile-3.5!skip
+tests/unit/plugins/module_utils/turbo/test_turbo_module.py future-import-boilerplate!skip
+tests/unit/plugins/module_utils/turbo/test_turbo_module.py metaclass-boilerplate!skip
 plugins/modules/turbo_fail.py compile-2.6!skip
 plugins/modules/turbo_fail.py compile-2.7!skip
 plugins/modules/turbo_fail.py compile-3.5!skip
