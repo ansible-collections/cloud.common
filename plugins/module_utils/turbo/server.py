@@ -222,11 +222,12 @@ class EmbeddedModule:
 
 async def run_as_lookup_plugin(data):
     errors = None
+    from ansible.module_utils._text import to_native
+
     try:
         import ansible.plugins.loader as plugin_loader
         from ansible.parsing.dataloader import DataLoader
         from ansible.template import Templar
-        from ansible.module_utils._text import to_native
 
         (
             lookup_name,
