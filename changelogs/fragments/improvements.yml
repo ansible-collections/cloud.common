@@ -1,7 +1,0 @@
----
-minor_changes:
-- units - ensure tests/units follow the Ansible-defined unit tests structure (https://github.com/ansible-collections/cloud.common/issues/89)
-- sanity - fix sanity errors (https://github.com/ansible-collections/cloud.common/issues/106)
-
-bugfixes:
-- module_utils/turbo/server - import needed library into the right place (https://github.com/ansible-collections/cloud.common/pull/120)

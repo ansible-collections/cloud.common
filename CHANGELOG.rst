@@ -5,6 +5,20 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.1.3
+======
+
+Minor Changes
+-------------
+
+- sanity - fix sanity errors (https://github.com/ansible-collections/cloud.common/issues/106)
+- units - ensure tests/units follow the Ansible-defined unit tests structure (https://github.com/ansible-collections/cloud.common/issues/89)
+
+Bugfixes
+--------
+
+- module_utils/turbo/server - import needed library into the right place (https://github.com/ansible-collections/cloud.common/pull/120)
+
 v2.1.2
 ======
 
