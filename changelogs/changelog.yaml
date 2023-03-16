@@ -130,3 +130,16 @@ releases:
     fragments:
     - graceful_shutdown.yaml
     release_date: '2022-06-23'
+  2.1.3:
+    changes:
+      bugfixes:
+      - module_utils/turbo/server - import needed library into the right place (https://github.com/ansible-collections/cloud.common/pull/120)
+      minor_changes:
+      - sanity - fix sanity errors (https://github.com/ansible-collections/cloud.common/issues/106)
+      - units - ensure tests/units follow the Ansible-defined unit tests structure
+        (https://github.com/ansible-collections/cloud.common/issues/89)
+    fragments:
+    - improvements.yml
+    - pin_black_version.yml
+    - update_booleans.yml
+    release_date: '2023-03-15'

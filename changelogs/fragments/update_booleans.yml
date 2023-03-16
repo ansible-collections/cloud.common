@@ -1,2 +1,0 @@
-trivial:
-- "Update booleans to true/false (See: https://github.com/ansible-collections/vmware.vmware_rest/issues/395)"
