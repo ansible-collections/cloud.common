@@ -4,7 +4,6 @@
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
-from posixpath import dirname
 from unittest.mock import Mock, ANY  # pylint: disable=syntax-error
 import time
 import pytest

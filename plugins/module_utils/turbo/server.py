@@ -225,9 +225,9 @@ async def run_as_lookup_plugin(data):
     from ansible.module_utils._text import to_native
 
     try:
-        import ansible.plugins.loader as plugin_loader
-        from ansible.parsing.dataloader import DataLoader
-        from ansible.template import Templar
+        import ansible.plugins.loader as plugin_loader  # pylint: disable=ansible-bad-module-import
+        from ansible.parsing.dataloader import DataLoader  # pylint: disable=ansible-bad-module-import
+        from ansible.template import Templar  # pylint: disable=ansible-bad-module-import
 
         (
             lookup_name,

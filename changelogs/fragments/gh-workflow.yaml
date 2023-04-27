@@ -1,0 +1,3 @@
+---
+trivial:
+- Add gha workflows and fix sanity issues (https://github.com/ansible-collections/cloud.common/pull/124).
