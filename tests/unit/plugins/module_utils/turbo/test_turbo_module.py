@@ -11,7 +11,6 @@ import socket
 import subprocess
 import os
 import ansible.module_utils.basic
-from posixpath import dirname
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     get_collection_name_from_path,
     expand_argument_specs_aliases,
