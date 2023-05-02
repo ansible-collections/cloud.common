@@ -78,6 +78,14 @@ def test_start_daemon_from_lookup(monkeypatch):
 
 
 def test_start_daemon_with_no_mock(tmp_path):
+    # This is an ugly fix to get this to pass in CI
+    import pathlib
+    import sys
+    from ansible_collections.cloud.common.plugins.module_utils.turbo import server
+
+    p = pathlib.Path(server.__file__)
+    coll = p / ".." / ".." / ".." / ".." / ".." / ".." / ".."
+    sys.path.insert(0, str(coll.resolve()))
     my_socket = tmp_path / "socket"
     turbo_socket = turbo_common.AnsibleTurboSocket(socket_path=str(my_socket), ttl=1)
     assert turbo_socket.start_server()
