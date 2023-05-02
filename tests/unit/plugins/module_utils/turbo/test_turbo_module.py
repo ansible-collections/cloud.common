@@ -11,8 +11,6 @@ import socket
 import subprocess
 import os
 import ansible.module_utils.basic
-import sys
-
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     get_collection_name_from_path,
     expand_argument_specs_aliases,
@@ -80,7 +78,6 @@ def test_start_daemon_from_lookup(monkeypatch):
 
 
 def test_start_daemon_with_no_mock(tmp_path):
-    # sys.path.insert(0, "/home/gosriniv/github/collections")
     my_socket = tmp_path / "socket"
     turbo_socket = turbo_common.AnsibleTurboSocket(socket_path=str(my_socket), ttl=1)
     assert turbo_socket.start_server()
