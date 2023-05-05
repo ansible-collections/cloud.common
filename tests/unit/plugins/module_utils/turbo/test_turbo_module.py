@@ -4,7 +4,6 @@
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
-from posixpath import dirname
 from unittest.mock import Mock, ANY  # pylint: disable=syntax-error
 import time
 import pytest
@@ -12,6 +11,8 @@ import socket
 import subprocess
 import os
 import ansible.module_utils.basic
+from pathlib import Path
+import sys
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     get_collection_name_from_path,
     expand_argument_specs_aliases,
@@ -79,6 +80,9 @@ def test_start_daemon_from_lookup(monkeypatch):
 
 
 def test_start_daemon_with_no_mock(tmp_path):
+    # This is an ugly fix to get this to pass in CI
+    p = Path.cwd().parents
+    sys.path.insert(0, str(p[2]))
     my_socket = tmp_path / "socket"
     turbo_socket = turbo_common.AnsibleTurboSocket(socket_path=str(my_socket), ttl=1)
     assert turbo_socket.start_server()

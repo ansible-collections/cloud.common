@@ -31,7 +31,6 @@ EXAMPLES = r"""
         test: "ansible"
 """
 
-import os
 
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     AnsibleTurboModule as AnsibleModule,
