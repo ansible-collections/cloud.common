@@ -175,7 +175,7 @@ See [CHANGELOG.rst](https://github.com/ansible-collections/cloud.common/blob/mai
 
 ## Testing, Releasing, Versioning and Deprecation
 
-This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md]https://github.com/ansible-collections/cloud.common/blob/main/CI.md).
+This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/ansible-collections/cloud.common/blob/main/CI.md).
 
 This collection follows [Semantic Versioning](https://semver.org/). More details on versioning can be found [in the Ansible docs](https://docs.ansible.com/ansible/latest/dev_guide/developing_collections.html#collection-versions).
 
