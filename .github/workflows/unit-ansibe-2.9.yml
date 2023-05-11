@@ -1,7 +1,4 @@
 name: Unit test on ansible-2.9
-concurrency:
-  group: ${{ github.head_ref }}
-  cancel-in-progress: true
 
 on:  # yamllint disable-line rule:truthy
   push:
