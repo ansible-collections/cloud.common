@@ -1,0 +1,33 @@
+name: Unit test on ansible-2.9
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+      - stable-*
+  pull_request:
+    branches:
+      - main
+      - stable-*
+
+jobs:
+  units:
+    runs-on: ubuntu-20.04
+    name: Units (${{ matrix.ansible }})
+    strategy:
+      fail-fast: true
+      matrix:
+        ansible:
+          - stable-2.9
+    steps:
+      - name: >-
+          Perform unit testing against
+          Ansible version ${{ matrix.ansible }}
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: ${{ matrix.ansible }}
+          testing-type: units
+          target-python-version: "3.7"

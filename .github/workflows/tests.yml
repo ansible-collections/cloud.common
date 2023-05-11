@@ -22,9 +22,6 @@ jobs:
       matrix_exclude: >-
           [
             {
-              "ansible-version": "stable-2.9"
-            },
-            {
               "ansible-version": "stable-2.12",
               "python-version": "3.7"
             },
