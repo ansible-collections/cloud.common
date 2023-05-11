@@ -13,7 +13,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   units:
     runs-on: ubuntu-20.04
-    name: Units (${{ matrix.ansible }})
+    name: "Units py${{ matrix.python-version }} / ${{ matrix.ansible-version }}"
     env:
       PY_COLORS: "1"
       source_directory: "./source"
