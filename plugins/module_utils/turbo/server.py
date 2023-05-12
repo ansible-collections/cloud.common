@@ -26,10 +26,6 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-# Make coding more python3-ish
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
-
 import argparse
 import asyncio
 from datetime import datetime
@@ -53,8 +49,10 @@ import uuid
 
 sys_path_lock = None
 env_lock = None
-
-import ansible.module_utils.basic
+try:
+    import ansible.module_utils.basic
+except ModuleNotFoundError:
+    pass
 
 please_include_me = "bar"
 
@@ -131,7 +129,6 @@ class EmbeddedModule:
         async with sys_path_lock:
             # Add the Ansiblez_path in sys.path
             sys.path.insert(0, self.ansiblez_path)
-
             # resettle the loaded modules that were associated
             # with a different Ansiblez.
             for path, module in sorted(tuple(sys.modules.items())):
