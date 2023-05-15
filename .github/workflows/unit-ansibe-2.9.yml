@@ -20,14 +20,58 @@ jobs:
         ansible-version:
           - stable-2.9
         python-version:
-          - "3.7"
+          - "3.6"
     steps:
-      - name: >-
-          Perform unit testing against py version ${{ matrix.python-version }}
-          Ansible version ${{ matrix.ansible-version }}
-        uses: ansible-community/ansible-test-gh-action@release/v1
+      - name: Checkout the collection repository
+        uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
         with:
-          ansible-core-version: ${{ matrix.ansible-version }}
-          testing-type: units
-          target-python-version: ${{ matrix.python-version }}
-          test-deps: ansible
+          path: ${{ env.source_directory }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: "0"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install ansible-core (${{ matrix.ansible-version }})
+        run: python3 -m pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible-version }}.tar.gz --disable-pip-version-check
+
+      - name: Read collection metadata from galaxy.yml
+        id: identify
+        uses: ansible-network/github_actions/.github/actions/identify_collection@main
+        with:
+          source_path: ${{ env.source_directory }}
+
+      - name: Pre install collections dependencies first so the collection install does not
+        run: ansible-galaxy collection install --pre ${{ inputs.collection_pre_install }} -p /home/runner/collections
+        if: inputs.collection_pre_install != ''
+
+      - name: Build and install the collection
+        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+        with:
+          install_python_dependencies: true
+          source_path: ${{ env.source_directory }}
+          collection_path: ${{ steps.identify.outputs.collection_path }}
+          tar_file: ${{ steps.identify.outputs.tar_file }}
+
+      - name: Print the ansible version
+        run: ansible --version
+
+      - name: Print the python dependencies
+        run: python3 -m pip list
+
+      - name: Run unit tests
+        run: python -m pytest tests/unit --showlocals
+        working-directory: ${{ steps.identify.outputs.collection_path }}
+
+
+     # - name: >-
+     #     Perform unit testing against py version ${{ matrix.python-version }}
+     #     Ansible version ${{ matrix.ansible-version }}
+     #   uses: ansible-community/ansible-test-gh-action@release/v1
+     #   with:
+     #     ansible-core-version: ${{ matrix.ansible-version }}
+     #     testing-type: units
+     #     target-python-version: ${{ matrix.python-version }}
+     #     test-deps: ansible

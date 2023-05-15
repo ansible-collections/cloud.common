@@ -1,3 +1,4 @@
 coverage==4.5.4
 pytest-xdist
-pytest-ansible-units ; python_version > '3.8'
+git+https://github.com/ansible-community/pytest-ansible-units.git ; python_version < '3.9'
+pytest-ansible ; python_version >= '3.9'
