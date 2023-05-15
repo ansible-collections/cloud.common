@@ -83,6 +83,7 @@ jobs:
             }
           ]
   unit-source:
+    # Runs on ansible-2.12+
     uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
     with:
       matrix_exclude: >-

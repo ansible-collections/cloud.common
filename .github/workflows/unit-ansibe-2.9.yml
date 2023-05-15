@@ -65,14 +65,3 @@ jobs:
       - name: Run unit tests
         run: python -m pytest tests/unit --showlocals
         working-directory: ${{ steps.identify.outputs.collection_path }}
-
-
-     # - name: >-
-     #     Perform unit testing against py version ${{ matrix.python-version }}
-     #     Ansible version ${{ matrix.ansible-version }}
-     #   uses: ansible-community/ansible-test-gh-action@release/v1
-     #   with:
-     #     ansible-core-version: ${{ matrix.ansible-version }}
-     #     testing-type: units
-     #     target-python-version: ${{ matrix.python-version }}
-     #     test-deps: ansible
