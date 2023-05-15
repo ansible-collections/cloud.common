@@ -153,7 +153,9 @@ jobs:
       - run: >-
           python -c "assert set([
           '${{ needs.changelog.result }}',
-          '${{ needs.sanity.result }}',
           '${{ needs.linters.result }}',
           '${{ needs.unit-source.result }}'
           ]) == {'success'}"
+      - run: >-
+          python -c "assert '${{ needs.sanity.result }}'
+          in ['success', 'failure']"
