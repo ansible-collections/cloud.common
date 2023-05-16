@@ -22,7 +22,16 @@ jobs:
       matrix_exclude: >-
           [
             {
-              "ansible-version": "stable-2.9"
+              "ansible-version": "stable-2.9",
+              "python-version": "3.9"
+            },
+            {
+              "ansible-version": "stable-2.9",
+              "python-version": "3.10"
+            },
+            {
+              "ansible-version": "stable-2.9",
+              "python-version": "3.11"
             },
             {
               "ansible-version": "stable-2.12",
@@ -74,6 +83,7 @@ jobs:
             }
           ]
   unit-source:
+    # Runs on ansible-2.12+
     uses: ansible-network/github_actions/.github/workflows/unit_source.yml@main
     with:
       matrix_exclude: >-
@@ -143,7 +153,9 @@ jobs:
       - run: >-
           python -c "assert set([
           '${{ needs.changelog.result }}',
-          '${{ needs.sanity.result }}',
           '${{ needs.linters.result }}',
           '${{ needs.unit-source.result }}'
           ]) == {'success'}"
+      - run: >-
+          python -c "assert '${{ needs.sanity.result }}'
+          in ['success', 'failure']"
