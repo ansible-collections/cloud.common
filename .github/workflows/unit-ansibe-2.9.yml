@@ -20,7 +20,6 @@ jobs:
         ansible-version:
           - stable-2.9
         python-version:
-          - "3.6"
           - "3.7"
     steps:
       - name: Checkout the collection repository
