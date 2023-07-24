@@ -43,10 +43,6 @@ jobs:
         with:
           source_path: ${{ env.source_directory }}
 
-      - name: Pre install collections dependencies first so the collection install does not
-        run: ansible-galaxy collection install --pre ${{ inputs.collection_pre_install }} -p /home/runner/collections
-        if: inputs.collection_pre_install != ''
-
       - name: Build and install the collection
         uses: ansible-network/github_actions/.github/actions/build_install_collection@main
         with:
