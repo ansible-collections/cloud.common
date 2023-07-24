@@ -2,7 +2,7 @@
 name: CI
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: sanity-units-${{ github.ref }}
   cancel-in-progress: true
 
 on:  # yamllint disable-line rule:truthy

@@ -1,5 +1,9 @@
 name: CI
 
+concurrency:
+  group: units-29-${{ github.ref }}
+  cancel-in-progress: true
+
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
