@@ -13,29 +13,22 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   units:
     runs-on: ubuntu-20.04
-    name: "Units py${{ matrix.python-version }} / ${{ matrix.ansible-version }}"
-    strategy:
-      fail-fast: true
-      matrix:
-        ansible-version:
-          - stable-2.9
-        python-version:
-          - "3.7"
+    env:
+      ansible_version: stable-2.9
+      python_version:  3.7
     steps:
       - name: Checkout the collection repository
         uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
         with:
           path: ${{ env.source_directory }}
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: "0"
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ env.python_version }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.python_version }}
 
-      - name: Install ansible-core (${{ matrix.ansible-version }})
-        run: python3 -m pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible-version }}.tar.gz --disable-pip-version-check
+      - name: Install ansible-core (${{ env.ansible_version }})
+        run: python3 -m pip install https://github.com/ansible/ansible/archive/${{ env.ansible_version }}.tar.gz --disable-pip-version-check
 
       - name: Read collection metadata from galaxy.yml
         id: identify
@@ -50,6 +43,7 @@ jobs:
           source_path: ${{ env.source_directory }}
           collection_path: ${{ steps.identify.outputs.collection_path }}
           tar_file: ${{ steps.identify.outputs.tar_file }}
+          ansible_version: "${{ env.ansible_version }}"
 
       - name: Print the ansible version
         run: ansible --version
