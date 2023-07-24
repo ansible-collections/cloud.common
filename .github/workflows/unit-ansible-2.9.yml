@@ -1,4 +1,4 @@
-name: Unit test on ansible-2.9
+name: CI
 
 on:  # yamllint disable-line rule:truthy
   push:
@@ -9,10 +9,13 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - main
       - stable-*
+  schedule:
+    - cron: '0 14 * * 1'
 
 jobs:
   units:
     runs-on: ubuntu-20.04
+    name: unit-2.9
     env:
       ansible_version: stable-2.9
       python_version:  3.7
