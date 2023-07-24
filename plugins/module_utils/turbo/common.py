@@ -55,8 +55,7 @@ class AnsibleTurboSocket:
                 return True
             except (ConnectionRefusedError, FileNotFoundError):
                 if not running:
-                    start_server_error = self.start_server()
-                    running = start_server_error is None
+                    running, start_server_error = self.start_server()
                 if attempt == 0:
                     if not running:
                         raise EmbeddedModuleUnexpectedFailure(
@@ -98,10 +97,9 @@ class AnsibleTurboSocket:
             stderr=subprocess.PIPE,
         )
         out, err = p.communicate()
-        if p.returncode != 0:
-            return "stdout='{0}' stderr='{1}'".format(
-                out.decode("utf-8"), err.decode("utf-8")
-            )
+        return p.returncode == 0, "stdout='{0}' stderr='{1}'".format(
+            out.decode("utf-8"), err.decode("utf-8")
+        )
 
     def communicate(self, data, wait_sleep=0.01):
         encoded_data = pickle.dumps((self._plugin, data))

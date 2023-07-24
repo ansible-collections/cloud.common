@@ -38,11 +38,25 @@ def test_collection_name(monkeypatch, my_module_path, my_collection_name):
     assert get_collection_name_from_path() == my_collection_name
 
 
+class MockPopen:
+    def __init__(self):
+        self.returncode = 0
+
+    @staticmethod
+    def communicate():
+        return b"output log", b"error log"
+
+
+def mocked_Popen(*args, **kwargs):
+    return MockPopen()
+
+
+@pytest.fixture
 def test_start_daemon_from_module(monkeypatch):
-    mocked_Popen = Mock()
     monkeypatch.setattr(subprocess, "Popen", mocked_Popen)
     turbo_socket = turbo_common.AnsibleTurboSocket(socket_path="/aa")
-    assert turbo_socket.start_server()
+    running, error = turbo_socket.start_server()
+    assert running
     mocked_Popen.assert_called_once_with(
         [
             ANY,
@@ -54,16 +68,19 @@ def test_start_daemon_from_module(monkeypatch):
         ],
         env=ANY,
         close_fds=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
 
 
+@pytest.fixture
 def test_start_daemon_from_lookup(monkeypatch):
-    mocked_Popen = Mock()
     monkeypatch.setattr(subprocess, "Popen", mocked_Popen)
     turbo_socket = turbo_common.AnsibleTurboSocket(
         socket_path="/aa", plugin="lookup", ttl=150
     )
-    assert turbo_socket.start_server()
+    running, error = turbo_socket.start_server()
+    assert running
     mocked_Popen.assert_called_once_with(
         [
             ANY,
@@ -76,6 +93,8 @@ def test_start_daemon_from_lookup(monkeypatch):
         ],
         env=ANY,
         close_fds=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
 
 
