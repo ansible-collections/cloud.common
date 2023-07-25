@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - fix lookup modules failing on Ansible 2.15 (https://github.com/ansible-collections/cloud.common/pull/130).
