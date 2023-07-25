@@ -361,6 +361,7 @@ class AnsibleVMwareTurboMode:
 
         try:
             from ansible.plugins.loader import init_plugin_loader
+
             init_plugin_loader()
         except ImportError:
             # Running on Ansible < 2.15
