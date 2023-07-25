@@ -86,6 +86,8 @@ class TurboLookupBase(LookupBase):
             socket_path=self.socket_path, ttl=self._ttl, plugin="lookup"
         ) as turbo_socket:
             content = (self._load_name, terms, variables, kwargs)
-            result = turbo_socket.communicate(content)
+            (result, errors) = turbo_socket.communicate(content)
+            if errors:
+                raise EmbeddedModuleUnexpectedFailure(errors)
 
             return result

@@ -1,0 +1,2 @@
+bugfixes:
+  - "Ensure result is always defined. (https://github.com/ansible-collections/cloud.common/pull/116/files)"

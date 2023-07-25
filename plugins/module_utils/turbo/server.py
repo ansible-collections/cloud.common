@@ -348,8 +348,7 @@ class AnsibleVMwareTurboMode:
         if plugin_type == "module":
             result = await run_as_module(content, debug_mode=self.debug_mode)
         elif plugin_type == "lookup":
-            _result = await run_as_lookup_plugin(content)
-            result = list(filter(lambda x: x is not None, _result))
+            result = await run_as_lookup_plugin(content)
         _terminate(result)
         del self.jobs_ongoing[job_id]
 
