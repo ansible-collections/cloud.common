@@ -359,6 +359,14 @@ class AnsibleVMwareTurboMode:
 
         import sys
 
+        try:
+            from ansible.plugins.loader import init_plugin_loader
+
+            init_plugin_loader()
+        except ImportError:
+            # Running on Ansible < 2.15
+            pass
+
         if sys.hexversion >= 0x30A00B1:
             # py3.10 drops the loop argument of create_task.
             self.loop.create_task(
