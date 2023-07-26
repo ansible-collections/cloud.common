@@ -228,6 +228,9 @@ async def run_as_lookup_plugin(data):
         import ansible.plugins.loader as plugin_loader
         from ansible.parsing.dataloader import DataLoader
         from ansible.template import Templar
+        from ansible.utils.collection_loader import AnsibleCollectionConfig
+        from ansible import constants as C
+        from ansible.utils.collection_loader._collection_finder import _AnsibleCollectionFinder
 
         (
             lookup_name,
@@ -235,6 +238,10 @@ async def run_as_lookup_plugin(data):
             variables,
             kwargs,
         ) = data
+
+        if not AnsibleCollectionConfig.collection_finder:
+            collection_loader = _AnsibleCollectionFinder(C.COLLECTIONS_PATHS, C.COLLECTIONS_SCAN_SYS_PATH)
+            collection_loader._install()
 
         # load lookup plugin
         templar = Templar(loader=DataLoader(), variables=None)
