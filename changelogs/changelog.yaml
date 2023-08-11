@@ -143,3 +143,16 @@ releases:
     - pin_black_version.yml
     - update_booleans.yml
     release_date: '2023-03-15'
+  2.1.4:
+    changes:
+      bugfixes:
+      - Ensure result is always defined in lookup plugins (https://github.com/ansible-collections/cloud.common/pull/116/files).
+      - Fix lookup modules failing on Ansible 2.15 (https://github.com/ansible-collections/cloud.common/pull/130).
+      release_summary: This release includes several bugfixes for lookup plugins.
+    fragments:
+    - 130-fix-ansible-2.15.yml
+    - 20230726-lookup.yml
+    - gh-workflow.yaml
+    - release_summary.yml
+    - update_ansible_version.yml
+    release_date: '2023-08-11'
