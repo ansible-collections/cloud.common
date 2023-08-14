@@ -5,6 +5,20 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v2.1.4
+======
+
+Release Summary
+---------------
+
+This release includes several bugfixes for lookup plugins.
+
+Bugfixes
+--------
+
+- Ensure result is always defined in lookup plugins (https://github.com/ansible-collections/cloud.common/pull/116/files).
+- Fix lookup modules failing on Ansible 2.15 (https://github.com/ansible-collections/cloud.common/pull/130).
+
 v2.1.3
 ======
 
