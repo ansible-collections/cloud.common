@@ -35,6 +35,7 @@ import ansible.module_utils.basic
 from .exceptions import (
     EmbeddedModuleSuccess,
     EmbeddedModuleFailure,
+    TooManyLoadedModules,
 )
 import ansible_collections.cloud.common.plugins.module_utils.turbo.common
 
@@ -116,6 +117,14 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         )
         self._running = None
         if not self.embedded_in_server:
+            external_libs = [
+                name
+                for name in sys.modules
+                if "site-packages" in str(sys.modules[name])
+                and name not in ["_virtualenv", "distro", "ansible.module_utils.distro"]
+            ]
+            if external_libs:
+                raise TooManyLoadedModules(external_libs)
             self.run_on_daemon()
 
     def socket_path(self):
