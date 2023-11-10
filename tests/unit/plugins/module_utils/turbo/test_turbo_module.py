@@ -3,22 +3,24 @@
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# py38 only, See: https://github.com/PyCQA/pylint/issues/2976
-from unittest.mock import Mock, ANY  # pylint: disable=syntax-error
-import time
-import pytest
+import os
 import socket
 import subprocess
-import os
-import ansible.module_utils.basic
-from pathlib import Path
 import sys
+import time
+from pathlib import Path
+
+# py38 only, See: https://github.com/PyCQA/pylint/issues/2976
+from unittest.mock import ANY, Mock  # pylint: disable=syntax-error
+
+import ansible.module_utils.basic
+import ansible_collections.cloud.common.plugins.module_utils.turbo.common as turbo_common
+import pytest
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
-    get_collection_name_from_path,
     expand_argument_specs_aliases,
+    get_collection_name_from_path,
     prepare_args,
 )
-import ansible_collections.cloud.common.plugins.module_utils.turbo.common as turbo_common
 
 
 @pytest.mark.parametrize(

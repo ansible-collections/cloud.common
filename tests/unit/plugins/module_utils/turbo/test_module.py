@@ -6,7 +6,6 @@
 import sys
 
 import pytest
-
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     AnsibleTurboModule,
 )
