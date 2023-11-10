@@ -28,7 +28,7 @@ EXAMPLES = r"""
 - name: Fail with additional arguments
   cloud.common.turbo_fail:
     params:
-        test: "ansible"
+      test: "ansible"
 """
 
 

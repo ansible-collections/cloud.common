@@ -5,12 +5,12 @@ name: common
 version: 2.1.4
 readme: README.md
 authors:
-- Ansible (https://github.com/ansible)
+  - Ansible (https://github.com/ansible)
 description: Set of common files for the cloud collections
 license_file: LICENSE
 tags:
-- cloud
-- virtualization
+  - cloud
+  - virtualization
 repository: https://github.com/ansible-collections/cloud.common
 homepage: https://github.com/ansible-collections/cloud.common
 issues: https://github.com/ansible-collections/cloud.common/issues
