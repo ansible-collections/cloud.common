@@ -46,8 +46,6 @@ jobs:
         - splitter
       if: ${{ needs.splitter.outputs.test_targets != '' }}
       env:
-        ansible_version: "milestone"
-        python_version: "3.11"
         source: "./cloud_common"
         ansible_posix: "./ansible_posix"
         kubernetes_core: "./kubernetes_core"
