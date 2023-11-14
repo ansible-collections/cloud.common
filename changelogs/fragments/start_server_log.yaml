@@ -1,0 +1,3 @@
+---
+trivial:
+  - capture stdout and stderr content when process failed to start turbo server (https://github.com/ansible-collections/cloud.common/pull/128).
