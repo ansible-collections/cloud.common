@@ -8,7 +8,7 @@ More content may be included later.
 
 # Requirements
 
-- ansible_turbo.module requires Python 3.6 and Ansible 2.13.0 or greater.
+- ansible_turbo.module requires Python 3.9 and Ansible 2.14.0 or greater.
 
 ## Ansible Turbo Module
 
