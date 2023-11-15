@@ -6,7 +6,6 @@
 import json
 
 import pytest
-
 from ansible.module_utils import basic
 from ansible.module_utils.common.text.converters import to_bytes
 

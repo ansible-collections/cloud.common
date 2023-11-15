@@ -32,11 +32,9 @@ import sys
 import tempfile
 
 import ansible.module_utils.basic
-from .exceptions import (
-    EmbeddedModuleSuccess,
-    EmbeddedModuleFailure,
-)
 import ansible_collections.cloud.common.plugins.module_utils.turbo.common
+
+from .exceptions import EmbeddedModuleFailure, EmbeddedModuleSuccess
 
 if False:  # pylint: disable=using-constant-test
     from .server import please_include_me

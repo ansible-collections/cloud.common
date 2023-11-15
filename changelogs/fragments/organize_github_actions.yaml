@@ -1,0 +1,3 @@
+---
+trivial:
+  - organize the workflows and pin ansible-lint to 6.21.x (https://github.com/ansible-collections/cloud.common/pull/139/).

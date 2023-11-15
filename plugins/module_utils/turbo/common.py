@@ -25,18 +25,16 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+import json
 import os
+import pickle
 import socket
+import subprocess
 import sys
 import time
-import subprocess
-import pickle
 from contextlib import contextmanager
-import json
 
-from .exceptions import (
-    EmbeddedModuleUnexpectedFailure,
-)
+from .exceptions import EmbeddedModuleUnexpectedFailure
 
 
 class AnsibleTurboSocket:
@@ -107,7 +105,7 @@ class AnsibleTurboSocket:
             return result
         except json.decoder.JSONDecodeError:
             raise EmbeddedModuleUnexpectedFailure(
-                "Cannot decode plugin answer: {0}".format(raw_answer)
+                f"Cannot decode plugin answer: {raw_answer}"
             )
 
     def close(self):

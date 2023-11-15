@@ -27,30 +27,29 @@
 #
 import argparse
 import asyncio
-from datetime import datetime
+
+# py38 only, See: https://github.com/PyCQA/pylint/issues/2976
+import collections  # pylint: disable=syntax-error
 import importlib
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
 import inspect  # pylint: disable=syntax-error
 import io
 import json
-
-# py38 only, See: https://github.com/PyCQA/pylint/issues/2976
-import collections  # pylint: disable=syntax-error
 import os
+import pickle
 import signal
 import sys
 import traceback
-import zipfile
-from zipimport import zipimporter
-import pickle
 import uuid
+import zipfile
+from datetime import datetime
+from zipimport import zipimporter
 
 sys_path_lock = None
 env_lock = None
 
 import ansible.module_utils.basic
-
 
 please_include_me = "bar"
 
@@ -180,8 +179,8 @@ class EmbeddedModule:
 
         from .exceptions import (
             EmbeddedModuleFailure,
-            EmbeddedModuleUnexpectedFailure,
             EmbeddedModuleSuccess,
+            EmbeddedModuleUnexpectedFailure,
         )
 
         # monkeypatching to pass the argument to the module, this is not
