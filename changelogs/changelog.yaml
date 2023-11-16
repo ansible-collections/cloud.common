@@ -159,9 +159,9 @@ releases:
   3.0.0:
     changes:
       breaking_changes:
-      - Bump minimum Python suupported version to 3.9.
+      - Bump minimum Python supported version to 3.9.
       - Remove support for ansible-core < 2.14.
-      release_summary: This major release drps support for ansible-core versions lower
+      release_summary: This major release drops support for ansible-core versions lower
         than 2.14 and Python versions lower than 3.9.
     fragments:
     - 20231114-ansible-version.yml
