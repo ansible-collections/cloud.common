@@ -1,4 +1,0 @@
----
-breaking_changes:
-  - "Remove support for ansible-core < 2.14."
-  - "Bump minimum Python suupported version to 3.9."

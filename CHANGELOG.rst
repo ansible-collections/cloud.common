@@ -5,6 +5,20 @@ cloud.common Release Notes
 .. contents:: Topics
 
 
+v3.0.0
+======
+
+Release Summary
+---------------
+
+This major release drops support for ansible-core versions lower than 2.14 and Python versions lower than 3.9.
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Bump minimum Python supported version to 3.9.
+- Remove support for ansible-core < 2.14.
+
 v2.1.4
 ======
 
