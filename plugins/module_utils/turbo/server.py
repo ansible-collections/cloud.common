@@ -222,14 +222,18 @@ class EmbeddedModule:
 
 async def run_as_lookup_plugin(data):
     errors = None
-    from ansible.module_utils._text import to_native
-
     result = None
+
     try:
         import ansible.plugins.loader as plugin_loader
+        from ansible.module_utils._text import to_native
         from ansible.parsing.dataloader import DataLoader
         from ansible.template import Templar
+    except ImportError as e:
+        errors = str(e)
+        return [result, errors]
 
+    try:
         (
             lookup_name,
             terms,
