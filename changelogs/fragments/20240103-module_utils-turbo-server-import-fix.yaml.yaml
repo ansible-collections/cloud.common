@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - module_utils/turbo/server - Ensure all import statements in run_as_lookup_plugin() are in a try/except block (https://github.com/ansible-collections/cloud.common/pull/143).
