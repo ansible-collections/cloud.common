@@ -1,2 +1,0 @@
-breaking_changes:
-  - cloud.common collection - Support for ansible-core < 2.15 has been dropped (https://github.com/ansible-collections/cloud.common/pull/145/files).
