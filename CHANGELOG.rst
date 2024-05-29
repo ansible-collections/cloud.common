@@ -10,7 +10,7 @@ v4.0.0
 Release Summary
 ---------------
 
-This major release includes a bugfix for Ansible turbo mode and drops support for ``ansible-core > 2.15``.
+This major release includes a bugfix for Ansible turbo mode and drops support for ``ansible-core < 2.15``.
 
 Breaking Changes / Porting Guide
 --------------------------------
