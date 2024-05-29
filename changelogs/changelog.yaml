@@ -177,7 +177,7 @@ releases:
       - module_utils/turbo/server - Ensure all import statements in run_as_lookup_plugin()
         are in a try/except block (https://github.com/ansible-collections/cloud.common/pull/143).
       release_summary: This major release includes a bugfix for Ansible turbo mode
-        and drops support for ``ansible-core > 2.15``.
+        and drops support for ``ansible-core < 2.15``.
     fragments:
     - 20240103-module_utils-turbo-server-import-fix.yaml.yaml
     - increase_ansible_core_version.yml
