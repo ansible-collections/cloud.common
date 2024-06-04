@@ -161,10 +161,25 @@ releases:
       breaking_changes:
       - Bump minimum Python supported version to 3.9.
       - Remove support for ansible-core < 2.14.
-      release_summary: This major release drops support for ansible-core versions lower
-        than 2.14 and Python versions lower than 3.9.
+      release_summary: This major release drops support for ansible-core versions
+        lower than 2.14 and Python versions lower than 3.9.
     fragments:
     - 20231114-ansible-version.yml
     - organize_github_actions.yaml
     - release_summary.yml
     release_date: '2023-11-16'
+  4.0.0:
+    changes:
+      breaking_changes:
+      - cloud.common collection - Support for ansible-core < 2.15 has been dropped
+        (https://github.com/ansible-collections/cloud.common/pull/145/files).
+      bugfixes:
+      - module_utils/turbo/server - Ensure all import statements in run_as_lookup_plugin()
+        are in a try/except block (https://github.com/ansible-collections/cloud.common/pull/143).
+      release_summary: This major release includes a bugfix for Ansible turbo mode
+        and drops support for ``ansible-core < 2.15``.
+    fragments:
+    - 20240103-module_utils-turbo-server-import-fix.yaml.yaml
+    - increase_ansible_core_version.yml
+    - release_summary.yml
+    release_date: '2024-05-24'

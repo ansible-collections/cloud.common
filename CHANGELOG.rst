@@ -4,6 +4,23 @@ cloud.common Release Notes
 
 .. contents:: Topics
 
+v4.0.0
+======
+
+Release Summary
+---------------
+
+This major release includes a bugfix for Ansible turbo mode and drops support for ``ansible-core < 2.15``.
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- cloud.common collection - Support for ansible-core < 2.15 has been dropped (https://github.com/ansible-collections/cloud.common/pull/145/files).
+
+Bugfixes
+--------
+
+- module_utils/turbo/server - Ensure all import statements in run_as_lookup_plugin() are in a try/except block (https://github.com/ansible-collections/cloud.common/pull/143).
 
 v3.0.0
 ======
@@ -161,3 +178,4 @@ Bugfixes
 
 v1.0.2
 ======
+
