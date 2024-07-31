@@ -1,12 +1,16 @@
-# cloud.common
+# cloud.common collection
 
-This collection is a library for the cloud modules. It's the home of the following component:
+This collection is a library for the cloud modules.
 
-- ansible_turbo.module: a cache sharing solution to speed up Ansible modules
+## Description:
+
+cloud.common is the home of the following component:
+
+- ansible_turbo.module: a cache sharing solution to to enhance the performance and efficiency of your cloud automation tasks. Users can achieve significant performance improvements in their cloud automation workflows by using this module.
 
 More content may be included later.
 
-# Requirements
+## Requirements
 
 - ansible_turbo.module requires Python 3.9 and Ansible 2.15.0 or greater.
 
@@ -82,47 +86,15 @@ Finally, if some of the dependeded libraries are large, it may be nice
 to defer your module imports, and do the loading AFTER the
 `AnsibleTurboModule` instance creation.
 
-### Example
-
-The Ansible module is slightly different while using AnsibleTurboModule.
-Here are some examples with OpenStack and VMware.
-
-These examples use `functools.lru_cache` that is the Python core since 3.3.
-`lru_cache()` decorator will managed the cache. It uses the function parameters
-as unicity criteria.
-
-- Integration with OpenStack Collection: https://github.com/goneri/ansible-collections-openstack/commit/53ce9860bb84eeab49a46f7a30e3c9588d53e367
-- Integration with VMware Collection: https://github.com/goneri/vmware/commit/d1c02b93cbf899fde3a4665e6bcb4d7531f683a3
-- Integration with Kubernetes Collection: https://github.com/ansible-collections/kubernetes.core/pull/68
-
-### Demo
-
-In this demo, we run one playbook that do several `os_keypair`
-calls. For the first time, we run the regular Ansible module.
-The second time, we run the same playbook, but with the modified
-version.
-
-
-[![asciicast](https://asciinema.org/a/329481.png)](https://asciinema.org/a/329481)
-
-
 ### The background service
 
-The daemon kills itself after 15s, and communication are done
-through an Unix socket.
-It runs in one single process and uses `asyncio` internally.
-Consequently you can use the `async` keyword in your Ansible module.
-This will be handy if you interact with a lot of remote systems
-at the same time.
+The daemon kills itself after 15s, and communication are done through an Unix socket. It runs in one single process and uses `asyncio` internally. Consequently you can use the `async` keyword in your Ansible module. This will be handy if you interact with a lot of remote systems at the same time.
 
 ### Security impact
 
-`ansible_module.turbo` open an Unix socket to interact with the background service.
-We use this service to open the connection toward the different target systems.
+`ansible_module.turbo` open an Unix socket to interact with the background service. We use this service to open the connection toward the different target systems. This is similar to what SSH does with the sockets.
 
-This is similar to what SSH does with the sockets.
-
-Keep in mind that:
+### Things to note:
 
 - All the modules can access the same cache. Soon an isolation will be done at the collection level (https://github.com/ansible-collections/cloud.common/pull/17)
 - A task can loaded a different version of a library and impact the next tasks.
@@ -130,16 +102,16 @@ Keep in mind that:
 
 When a module stores a session in a cache, it's a good idea to use a hash of the authentication information to identify the session.
 
-.. note:: You may want to isolate your Ansible environemt in a container, in this case you can consider https://github.com/ansible/ansible-builder
+You may want to isolate your Ansible environemt in a container, in this case you can consider https://github.com/ansible/ansible-builder
 
-### Error management
+### Error handling
 
 `ansible_module.turbo` uses exception to communicate a result back to the module.
 
 - `EmbeddedModuleFailure` is raised when `json_fail()` is called.
 - `EmbeddedModuleSuccess` is raised in case of success and return the result to the origin module processthe origin.
 
-Thse exceptions are defined in `ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions`.
+These exceptions are defined in `ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions`.
 You can raise `EmbeddedModuleFailure` exception yourself, for instance from a module in `module_utils`.
 
 Be careful with the catch all exception (`except Exception:`). Not only they are bad practice, but also may interface with this mechanism.
@@ -156,10 +128,30 @@ Replace `foo.bar` with the name of the collection.
 
 You can use the `--help` argument to get a list of the optional parameters.
 
+## Use Case
 
-## More information
+The Ansible module is slightly different while using AnsibleTurboModule.
+Here are some examples with OpenStack and VMware.
+
+These examples use `functools.lru_cache` that is the Python core since 3.3.
+`lru_cache()` decorator will managed the cache. It uses the function parameters
+as unicity criteria.
+
+- Integration with OpenStack Collection: https://github.com/goneri/ansible-collections-openstack/commit/53ce9860bb84eeab49a46f7a30e3c9588d53e367
+- Integration with VMware Collection: https://github.com/goneri/vmware/commit/d1c02b93cbf899fde3a4665e6bcb4d7531f683a3
+- Integration with Kubernetes Collection: https://github.com/ansible-collections/kubernetes.core/pull/68
+
+## Related Information
 
 <!-- List out where the user can find additional information, such as working group meeting times, slack/IRC channels, or documentation for the product this collection automates. At a minimum, link to: -->
+
+### Demo
+
+In this demo, we run one playbook that do several `os_keypair` calls. For the first time, we run the regular Ansible module. The second time, we run the same playbook, but with the modified version.
+
+[![asciicast](https://asciinema.org/a/329481.png)](https://asciinema.org/a/329481)
+
+### More information
 
 - [Ansible Collection overview](https://github.com/ansible-collections/overview)
 - [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
@@ -168,16 +160,15 @@ You can use the `--help` argument to get a list of the optional parameters.
 - [The Bullhorn (the Ansible Contributor newsletter)](https://us19.campaign-archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420)
 - [Changes impacting Contributors](https://github.com/ansible-collections/overview/issues/45)
 
-
-## Release notes
-
-See [CHANGELOG.rst](https://github.com/ansible-collections/cloud.common/blob/main/CHANGELOG.rst).
-
-## Testing, Releasing, Versioning and Deprecation
+## Testing
 
 This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/ansible-collections/cloud.common/blob/main/CI.md).
 
+## Versioning
+
 This collection follows [Semantic Versioning](https://semver.org/). More details on versioning can be found [in the Ansible docs](https://docs.ansible.com/ansible/latest/dev_guide/developing_collections.html#collection-versions).
+
+## Releasing
 
 We plan to regularly release new minor or bugfix versions once new features or bugfixes have been implemented.
 
@@ -187,13 +178,25 @@ Releasing happens by tagging the `main` branch.
 
 We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Cloud.Common collection repository](https://github.com/ansible-collections/cloud.common).
 
+## Support
+
+For the latest supported versions, refer to the release notes below.
+
+If you encounter issues or have questions, you can submit a support request through the following channels:
+ - GitHub Issues: Report bugs, request features, or ask questions by opening an issue in the [GitHub repository](https://github.com/ansible-collections/cloud.common/). 
+ - Ansible Community: Engage with the Ansible community on the Ansible Project Mailing List or [Ansible Forum](https://forum.ansible.com/g/AWS).
+
+## Release notes
+
+See [CHANGELOG.rst](https://github.com/ansible-collections/cloud.common/blob/main/CHANGELOG.rst).
+
 ## Code of Conduct
 
 We follow [Ansible Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html) in all our interactions within this project.
 
 If you encounter abusive behavior violating the [Ansible Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html), please refer to the [policy violations](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html#policy-violations) section of the Code of Conduct for information on how to raise a complaint.
 
-## Licensing
+## License Information
 
 <!-- Include the appropriate license information here and a pointer to the full licensing details. If the collection contains modules migrated from the ansible/ansible repo, you must use the same license that existed in the ansible/ansible repo. See the GNU license example below. -->
 
