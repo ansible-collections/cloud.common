@@ -72,7 +72,7 @@ class AnsibleTurboSocket:
         command = [sys.executable]
         if self._plugin == "module":
             ansiblez_path = sys.path[0]
-            env.update({"PYTHONPATH": ansiblez_path})
+            env.update({"PYTHONPATH": ":".join(path for path in env.get("PYTHONPATH").split(":") + [ansiblez_path] if path)})
             command += [
                 "-m",
                 "ansible_collections.cloud.common.plugins.module_utils.turbo.server",
