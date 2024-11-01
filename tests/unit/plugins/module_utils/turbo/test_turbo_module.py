@@ -88,10 +88,22 @@ def test_start_daemon_with_no_mock(tmp_path):
     my_socket = tmp_path / "socket"
     turbo_socket = turbo_common.AnsibleTurboSocket(socket_path=str(my_socket), ttl=1)
     assert turbo_socket.start_server()
-    time.sleep(0.5)
-    assert my_socket.is_socket()
-    time.sleep(0.8)
-    assert not my_socket.exists()
+    # It might take the server a little while to finish starting up and bind
+    # the socket.
+    for _ in range(50):
+        time.sleep(0.1)
+        if my_socket.is_socket():
+            break
+    else:
+        assert my_socket.is_socket()
+    # Wait for the TTL to expire, plus a little in case it takes the server
+    # some time to be scheduled back in.
+    for _ in range(20):
+        time.sleep(0.1)
+        if not my_socket.exists():
+            break
+    else:
+        assert not my_socket.exists()
 
 
 def test_connect(monkeypatch):
