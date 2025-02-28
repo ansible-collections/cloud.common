@@ -2,7 +2,7 @@
 
 namespace: cloud
 name: common
-version: 3.0.0
+version: 3.0.1
 readme: README.md
 authors:
   - Ansible (https://github.com/ansible)

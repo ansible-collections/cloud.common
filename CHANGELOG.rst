@@ -4,6 +4,18 @@ cloud.common Release Notes
 
 .. contents:: Topics
 
+v3.0.1
+======
+
+Release Summary
+---------------
+
+This patch release includes a bugfix for module_utils/turbo/server, ensuring that all import statements within run_as_lookup_plugin() are wrapped in a try/except block for improved error handling and stability.
+
+Bugfixes
+--------
+
+- module_utils/turbo/server - Ensure all import statements in run_as_lookup_plugin() are in a try/except block (https://github.com/ansible-collections/cloud.common/pull/143).
 
 v3.0.0
 ======
@@ -161,3 +173,4 @@ Bugfixes
 
 v1.0.2
 ======
+
