@@ -49,6 +49,7 @@ jobs:
         source: "./cloud_common"
         ansible_posix: "./ansible_posix"
         kubernetes_core: "./kubernetes_core"
+        community_general: "./community_general"
       strategy:
         fail-fast: false
         matrix:
@@ -95,6 +96,13 @@ jobs:
             path: ${{ env.ansible_posix }}
             ref: main
 
+        - name: checkout ansible-collections/community.general
+          uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
+          with:
+            repository: ansible-collections/community.general
+            path: ${{ env.community_general }}
+            ref: main
+
         - name: Set up Python ${{ matrix.python-version }}
           uses: actions/setup-python@v4
           with:
@@ -108,7 +116,7 @@ jobs:
             --disable-pip-version-check
           shell: bash
 
-        - name: Build and install kuernetes.core collection
+        - name: Build and install kubernetes.core collection
           id: install-kubernetes-core
           uses: ansible-network/github_actions/.github/actions/build_install_collection@main
           with:
@@ -126,6 +134,12 @@ jobs:
           with:
             install_python_dependencies: true
             source_path: ${{ env.ansible_posix }}
+
+        - name: Build and install community.general collection
+          uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+          with:
+            install_python_dependencies: true
+            source_path: ${{ env.community_general }}
 
         - name: Create kubernetes cluster
           uses: helm/kind-action@v1.4.0
