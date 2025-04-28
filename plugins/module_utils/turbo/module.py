@@ -96,7 +96,19 @@ def prepare_args(argument_specs, params):
             }
         else:
             new_params[k] = v
+
     args = {"ANSIBLE_MODULE_ARGS": new_params}
+    try:
+        from ansible.module_utils.common import json as _common_json
+
+        encoder = _common_json.get_module_encoder(
+            "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
+        )
+        args = json.dumps(args, cls=encoder).encode()
+    except AttributeError:
+        # pre ansible-core 2.19, get_module_encoder does not exist
+        pass
+
     return args
 
 
