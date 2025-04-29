@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+import json
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
 from unittest.mock import ANY, Mock  # pylint: disable=syntax-error
@@ -113,34 +114,58 @@ def test_expand_argument_specs_aliases():
 def test_prepare_args():
     argspec = {"foo": {"type": int}}
     params = {"foo": 1}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+    expected = {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+    assert prepare_args(argspec, params) in (
+        expected,
+        json.dumps(expected).encode("utf-8"),
+    )
 
 
 def test_prepare_args_ignore_none():
     argspec = {"foo": {"type": int}}
     params = {"foo": None}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {}}
+    expected = {"ANSIBLE_MODULE_ARGS": {}}
+    assert prepare_args(argspec, params) in (
+        expected,
+        json.dumps(expected).encode("utf-8"),
+    )
 
 
 def test_prepare_args_subkey_freeform():
     argspec = {"foo": {"type": dict, "default": {}}}
     params = {"foo": {"bar": 1}}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": {"bar": 1}}}
+    expected = {"ANSIBLE_MODULE_ARGS": {"foo": {"bar": 1}}}
+    assert prepare_args(argspec, params) in (
+        expected,
+        json.dumps(expected).encode("utf-8"),
+    )
 
 
 def test_prepare_args_subkey_with_default():
     argspec = {"foo": {"bar": {"default": 1}}}
     params = {"foo": {"bar": 1}}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": {}}}
+    expected = {"ANSIBLE_MODULE_ARGS": {"foo": {}}}
+    assert prepare_args(argspec, params) in (
+        expected,
+        json.dumps(expected).encode("utf-8"),
+    )
 
 
 def test_prepare_args_dedup_aliases():
     argspec = {"foo": {"aliases": ["bar"], "type": int}}
     params = {"foo": 1, "bar": 1}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+    expected = {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+    assert prepare_args(argspec, params) in (
+        expected,
+        json.dumps(expected).encode("utf-8"),
+    )
 
 
 def test_prepare_args_with_aliases():
     argspec = {"foo": {"aliases": ["bar"], "type": int}}
     params = {"foo": 1}
-    assert prepare_args(argspec, params) == {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+    expected = {"ANSIBLE_MODULE_ARGS": {"foo": 1}}
+    assert prepare_args(argspec, params) in (
+        expected,
+        json.dumps(expected).encode("utf-8"),
+    )

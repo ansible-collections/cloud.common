@@ -174,8 +174,11 @@ class EmbeddedModule:
             print(backtrace)  # pylint: disable=ansible-bad-function
 
     async def run(self):
-        class FakeStdin:
+        class FakeStdin(io.IOBase):
             buffer = None
+
+            def __init__(self):
+                super().__init__()
 
         from .exceptions import (
             EmbeddedModuleFailure,
