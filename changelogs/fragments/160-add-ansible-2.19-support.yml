@@ -1,0 +1,6 @@
+---
+minor_changes:
+  - module_utils/turbo/server - Add support for 2.19 by making FakeStdin implement the IOBase ABC
+    (https://github.com/ansible-collections/cloud.common/pull/167).
+  - module_utils/turbo/module - Add support for 2.19 by returning a json compatible arg obj instead of a dict if possible
+    (https://github.com/ansible-collections/cloud.common/pull/167).
