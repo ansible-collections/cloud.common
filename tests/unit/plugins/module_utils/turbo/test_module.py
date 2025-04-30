@@ -6,6 +6,7 @@
 import sys
 
 import pytest
+from ansible.module_utils import basic
 from ansible_collections.cloud.common.plugins.module_utils.turbo.module import (
     AnsibleTurboModule,
 )
@@ -21,12 +22,18 @@ def _patch_globals(monkeypatch):
     # and bypass the detection process.
     monkeypatch.setattr(AnsibleTurboModule, "collection_name", "namespace.name")
 
+    # Patch the ansible profile global var, since it is not set when running unit test. This
+    # var only exists for ansible 2.19 and above
+    try:
+        monkeypatch.setattr(basic, "_ANSIBLE_PROFILE", "legacy")
+    except AttributeError:
+        pass
+
 
 def test_module_socket_path_remote_tmp_not_set(monkeypatch, set_module_args):
     _patch_globals(monkeypatch)
     set_module_args()
     module = AnsibleTurboModule(argument_spec={})
-
     path = module.socket_path()
 
     # We cannot know what tmp dir python uses, but we do know that it is a full path
