@@ -183,3 +183,18 @@ releases:
     - increase_ansible_core_version.yml
     - release_summary.yml
     release_date: '2024-05-24'
+  4.1.0:
+    changes:
+      minor_changes:
+      - Bump version of ansible-lint to minimum 25.1.2
+      - module_utils/turbo/module - Add support for 2.19 by returning a json compatible
+        arg obj instead of a dict if possible (https://github.com/ansible-collections/cloud.common/pull/167).
+      - module_utils/turbo/server - Add support for 2.19 by making FakeStdin implement
+        the IOBase ABC (https://github.com/ansible-collections/cloud.common/pull/167).
+      release_summary: This release adds support to ansible-core 2.19 and bumps the
+        ansible-lint version to 25.1.2
+    fragments:
+    - 160-add-ansible-2.19-support.yml
+    - 170-update-ansible-lint-version.yml
+    - 4.1.0.yml
+    release_date: '2025-05-15'
