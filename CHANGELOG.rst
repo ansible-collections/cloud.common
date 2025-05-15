@@ -16,9 +16,9 @@ This release adds support to ansible-core 2.19 and bumps the ansible-lint versio
 Minor Changes
 -------------
 
-- Bump version of ansible-lint to minimum 25.1.2
-- module_utils/turbo/module - Add support for 2.19 by returning a json compatible arg obj instead of a dict if possible (https://github.com/ansible-collections/cloud.common/pull/167).
-- module_utils/turbo/server - Add support for 2.19 by making FakeStdin implement the IOBase ABC (https://github.com/ansible-collections/cloud.common/pull/167).
+- Bump version of ``ansible-lint`` to minimum ``25.1.2`` (https://github.com/ansible-collections/cloud.common/pull/170).
+- module_utils/turbo/module - Add support for ``ansible-core 2.19`` by returning a JSON-compatible ``arg`` object instead of a ``dict`` if possible (https://github.com/ansible-collections/cloud.common/pull/167).
+- module_utils/turbo/server - Add support for ``ansible-core 2.19`` by making ``FakeStdin`` implement the ``IOBase`` abstract base class (https://github.com/ansible-collections/cloud.common/pull/167).
 
 v4.0.0
 ======
