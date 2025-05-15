@@ -11,7 +11,7 @@ v4.1.0
 Release Summary
 ---------------
 
-This release adds support to ansible-core 2.19 and bumps the ansible-lint version to 25.1.2
+This release adds support for ``ansible-core 2.19`` and bumps the ``ansible-lint`` version to ``25.1.2``.
 
 Minor Changes
 -------------
