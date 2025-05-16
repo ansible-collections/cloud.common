@@ -57,6 +57,9 @@ jobs:
           - milestone
         python-version:
           - "3.12"
+          - "3.11"
+          - "3.10"
+          - "3.9"
         workflow-id: ${{ fromJson(needs.splitter.outputs.test_jobs) }}
     name: "integration-kubernetes-core-${{ matrix.python-version }}-${{ matrix.ansible-version }}-${{ matrix.workflow-id }}"
     steps:
