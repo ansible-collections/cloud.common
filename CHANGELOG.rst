@@ -4,6 +4,22 @@ cloud.common Release Notes
 
 .. contents:: Topics
 
+
+v4.1.0
+======
+
+Release Summary
+---------------
+
+This release adds support for ``ansible-core 2.19`` and bumps the ``ansible-lint`` version to ``25.1.2``.
+
+Minor Changes
+-------------
+
+- Bump version of ``ansible-lint`` to minimum ``25.1.2`` (https://github.com/ansible-collections/cloud.common/pull/170).
+- module_utils/turbo/module - Add support for ``ansible-core 2.19`` by returning a JSON-compatible ``arg`` object instead of a ``dict`` if possible (https://github.com/ansible-collections/cloud.common/pull/167).
+- module_utils/turbo/server - Add support for ``ansible-core 2.19`` by making ``FakeStdin`` implement the ``IOBase`` abstract base class (https://github.com/ansible-collections/cloud.common/pull/167).
+
 v4.0.0
 ======
 
@@ -178,4 +194,3 @@ Bugfixes
 
 v1.0.2
 ======
-
