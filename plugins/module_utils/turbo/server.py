@@ -364,7 +364,8 @@ class AnsibleVMwareTurboMode:
         self.stop()
 
     def start(self):
-        self.loop = asyncio.get_event_loop()
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
         self.loop.add_signal_handler(signal.SIGTERM, self.stop)
         self.loop.set_exception_handler(self.handle_exception)
         self._watcher = self.loop.create_task(self.ghost_killer())
@@ -390,7 +391,10 @@ class AnsibleVMwareTurboMode:
                     self.handle, path=self.socket_path, loop=self.loop
                 )
             )
-        self.loop.run_forever()
+        try:
+            self.loop.run_forever()
+        finally:
+            self.loop.close()
 
     def stop(self):
         os.unlink(self.socket_path)
