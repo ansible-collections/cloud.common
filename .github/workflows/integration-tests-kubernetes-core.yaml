@@ -55,9 +55,15 @@ jobs:
       matrix:
         ansible-version:
           - milestone
+          - stable-2.17
         python-version:
           - "3.12"
+          - "3.11"
+          - "3.10"
         workflow-id: ${{ fromJson(needs.splitter.outputs.test_jobs) }}
+        exclude:
+          - ansible-version: milestone
+            python-version: 3.10
     name: "integration-kubernetes-core-${{ matrix.python-version }}-${{ matrix.ansible-version }}-${{ matrix.workflow-id }}"
     steps:
       - name: Read target
