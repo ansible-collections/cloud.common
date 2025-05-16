@@ -34,13 +34,18 @@ from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions impo
 )
 
 
-def get_server_ttl(variables):
+def get_server_ttl(variables, templar=None):
     # trying to retrieve first TTL from environment variable
     ttl = os.environ.get("ANSIBLE_TURBO_LOOKUP_TTL", None)
     if ttl is not None:
         return ttl
+
     # Read TTL from ansible environment
-    for env_var in variables.get("environment", []):
+    ans_env = variables.get("environment", [])
+    if templar is not None and templar.is_template(ans_env):
+        ans_env = templar.template(ans_env)
+
+    for env_var in ans_env:
         value = env_var.get("ANSIBLE_TURBO_LOOKUP_TTL", None)
         test_var_int = [
             isinstance(value, str) and value.isnumeric(),
@@ -53,7 +58,7 @@ def get_server_ttl(variables):
 
 class TurboLookupBase(LookupBase):
     def run_on_daemon(self, terms, variables=None, **kwargs):
-        self._ttl = get_server_ttl(variables)
+        self._ttl = get_server_ttl(variables, self._templar)
         return self.execute(terms=terms, variables=variables, **kwargs)
 
     @property
