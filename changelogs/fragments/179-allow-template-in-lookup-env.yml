@@ -1,0 +1,5 @@
+---
+bugfixes:
+  - >-
+    plugin_utils/turbo/lookup - fix issue when the ansible environment is set to a variable
+    template instead of a dict (https://github.com/ansible-collections/cloud.common/issues/179).
