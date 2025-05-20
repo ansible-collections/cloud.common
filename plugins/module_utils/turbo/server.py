@@ -270,6 +270,20 @@ async def run_as_lookup_plugin(data):
     return [result, errors]
 
 
+def encode_module_args(params):
+    try:
+        from ansible.module_utils.common import json as _common_json
+
+        encoder = _common_json.get_module_encoder(
+            "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
+        )
+        params = json.dumps(json.loads(params), cls=encoder).encode()
+    except AttributeError:
+        # pre ansible-core 2.19, get_module_encoder does not exist
+        pass
+    return params
+
+
 async def run_as_module(content, debug_mode):
     result = None
     from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
@@ -287,7 +301,7 @@ async def run_as_module(content, debug_mode):
                 f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
             )
 
-        embedded_module = EmbeddedModule(ansiblez_path, params)
+        embedded_module = EmbeddedModule(ansiblez_path, encode_module_args(params))
         if debug_mode:
             embedded_module.debug_mode = True
 

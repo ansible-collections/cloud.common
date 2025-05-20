@@ -101,20 +101,6 @@ def prepare_args(argument_specs, params):
     return args
 
 
-def encode_args(args):
-    try:
-        from ansible.module_utils.common import json as _common_json
-
-        encoder = _common_json.get_module_encoder(
-            "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
-        )
-        args = json.dumps(args, cls=encoder)
-    except AttributeError:
-        # pre ansible-core 2.19, get_module_encoder does not exist
-        args = json.dumps(args)
-    return args
-
-
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     embedded_in_server = False
     collection_name = None
@@ -161,7 +147,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
                 args = self.init_args()
                 data = [
                     ansiblez_path,
-                    encode_args(args),
+                    json.dumps(args),
                     dict(os.environ),
                 ]
                 content = json.dumps(data).encode()
