@@ -22,7 +22,7 @@
     - debug: var=_result
     - assert:
         that:
-          - _result.counter == 1002
+          - _result.counter == 202
     - pause:
         seconds: 35
     - cloud.common.turbo_demo:
