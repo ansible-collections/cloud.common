@@ -44,6 +44,7 @@ import traceback
 import uuid
 import zipfile
 from datetime import datetime
+from pathlib import Path
 from zipimport import zipimporter
 
 sys_path_lock = None
@@ -363,6 +364,10 @@ class AnsibleVMwareTurboMode:
         traceback.print_exception(type(e), e, e.__traceback__)
         self.stop()
 
+    def ensure_socket_path(self):
+        path = Path(os.path.dirname(self.socket_path))
+        path.mkdir(parents=True, exist_ok=True)
+
     def start(self):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
@@ -379,6 +384,9 @@ class AnsibleVMwareTurboMode:
         except ImportError:
             # Running on Ansible < 2.15
             pass
+
+        # Ensure socket path
+        self.ensure_socket_path()
 
         if sys.hexversion >= 0x30A00B1:
             # py3.10 drops the loop argument of create_task.

@@ -98,17 +98,20 @@ def prepare_args(argument_specs, params):
             new_params[k] = v
 
     args = {"ANSIBLE_MODULE_ARGS": new_params}
+    return args
+
+
+def encode_args(args):
     try:
         from ansible.module_utils.common import json as _common_json
 
         encoder = _common_json.get_module_encoder(
             "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
         )
-        args = json.dumps(args, cls=encoder).encode()
+        args = json.dumps(args, cls=encoder)
     except AttributeError:
         # pre ansible-core 2.19, get_module_encoder does not exist
-        pass
-
+        args = json.dumps(args)
     return args
 
 
@@ -150,18 +153,24 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     def run_on_daemon(self):
         result = dict(changed=False, original_message="", message="")
         ttl = os.environ.get("ANSIBLE_TURBO_LOOKUP_TTL", None)
-        with ansible_collections.cloud.common.plugins.module_utils.turbo.common.connect(
-            socket_path=self.socket_path(), ttl=ttl
-        ) as turbo_socket:
-            ansiblez_path = sys.path[0]
-            args = self.init_args()
-            data = [
-                ansiblez_path,
-                json.dumps(args),
-                dict(os.environ),
-            ]
-            content = json.dumps(data).encode()
-            result = turbo_socket.communicate(content)
+        try:
+            with ansible_collections.cloud.common.plugins.module_utils.turbo.common.connect(
+                socket_path=self.socket_path(), ttl=ttl
+            ) as turbo_socket:
+                ansiblez_path = sys.path[0]
+                args = self.init_args()
+                data = [
+                    ansiblez_path,
+                    encode_args(args),
+                    dict(os.environ),
+                ]
+                content = json.dumps(data).encode()
+                result = turbo_socket.communicate(content)
+        except Exception as e:
+            self.fail_json(
+                msg=f"Failed to run module on daemon. Socket path = {self.socket_path()}",
+                exception=e,
+            )
         self.exit_json(**result)
 
     def exit_json(self, **kwargs):

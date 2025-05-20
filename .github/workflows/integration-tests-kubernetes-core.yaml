@@ -1,5 +1,5 @@
 ---
-name: Integration tests
+name: Integration tests (kubernetes.core)
 on:
   pull_request:
     branches:
@@ -64,7 +64,7 @@ jobs:
         exclude:
           - ansible-version: milestone
             python-version: 3.10
-    name: "integration-kubernetes-core-${{ matrix.python-version }}-${{ matrix.ansible-version }}-${{ matrix.workflow-id }}"
+    name: "integration-${{ matrix.python-version }}-${{ matrix.ansible-version }}-${{ matrix.workflow-id }}"
     steps:
       - name: Read target
         id: read-targets
