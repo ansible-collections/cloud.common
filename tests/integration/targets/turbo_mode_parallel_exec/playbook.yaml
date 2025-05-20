@@ -1,6 +1,9 @@
 - hosts: localhost
   gather_facts: false
   tasks:
+    - name: Wait for any previous call to end
+      pause:
+        seconds: 35
     - cloud.common.turbo_demo:
     - pause:
         seconds: 5
