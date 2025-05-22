@@ -181,6 +181,9 @@ class EmbeddedModule:
             def __init__(self):
                 super().__init__()
 
+            def isatty(self):
+                return False
+
         from .exceptions import (
             EmbeddedModuleFailure,
             EmbeddedModuleSuccess,
@@ -193,6 +196,7 @@ class EmbeddedModule:
         _fake_stdin = FakeStdin()
         _fake_stdin.buffer = io.BytesIO(self.params.encode())
         sys.stdin = _fake_stdin
+        os.environ["ANSIBLE_TURBO_MODULE_PARAMS"] = self.params
         # Trick to be sure ansible.module_utils.basic._load_params() won't
         # try to build the module parameters from the daemon arguments
         sys.argv = sys.argv[:1]
@@ -270,20 +274,6 @@ async def run_as_lookup_plugin(data):
     return [result, errors]
 
 
-def encode_module_args(params):
-    try:
-        from ansible.module_utils.common import json as _common_json
-
-        encoder = _common_json.get_module_encoder(
-            "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
-        )
-        params = json.dumps(json.loads(params), cls=encoder).encode()
-    except AttributeError:
-        # pre ansible-core 2.19, get_module_encoder does not exist
-        pass
-    return params
-
-
 async def run_as_module(content, debug_mode):
     result = None
     from ansible_collections.cloud.common.plugins.module_utils.turbo.exceptions import (
@@ -301,7 +291,7 @@ async def run_as_module(content, debug_mode):
                 f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
             )
 
-        embedded_module = EmbeddedModule(ansiblez_path, encode_module_args(params))
+        embedded_module = EmbeddedModule(ansiblez_path, params)
         if debug_mode:
             embedded_module.debug_mode = True
 

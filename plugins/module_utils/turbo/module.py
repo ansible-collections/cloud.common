@@ -101,6 +101,25 @@ def prepare_args(argument_specs, params):
     return args
 
 
+def dump_module_args(args):
+    # try:
+    #     from ansible.module_utils.common import json as _common_json
+
+    #     encoder = _common_json.get_module_encoder(
+    #         "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
+    #     )
+    #     args = json.dumps(args, cls=encoder)
+    # except AttributeError:
+    #     # pre ansible-core 2.19, get_module_encoder does not exist
+    #     args = json.dumps(args)
+    # return args
+    return json.dumps(args)
+
+
+def fake_load_params():
+    pass
+
+
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
     embedded_in_server = False
     collection_name = None
@@ -110,6 +129,13 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
         self.collection_name = (
             AnsibleTurboModule.collection_name or get_collection_name_from_path()
         )
+        if self.embedded_in_server:
+            self._load_params = fake_load_params
+            # from ansible.module_utils._internal._json._profiles._module_legacy_c2m import Decoder
+            # self.params = json.loads(os.environ.get("ANSIBLE_TURBO_MODULE_PARAMS"), cls=Decoder)
+            self.params = json.loads(os.environ.get("ANSIBLE_TURBO_MODULE_PARAMS"))[
+                "ANSIBLE_MODULE_ARGS"
+            ]
         ansible.module_utils.basic.AnsibleModule.__init__(
             self, *args, bypass_checks=not self.embedded_in_server, **kwargs
         )
@@ -147,7 +173,7 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
                 args = self.init_args()
                 data = [
                     ansiblez_path,
-                    json.dumps(args),
+                    dump_module_args(args),
                     dict(os.environ),
                 ]
                 content = json.dumps(data).encode()
