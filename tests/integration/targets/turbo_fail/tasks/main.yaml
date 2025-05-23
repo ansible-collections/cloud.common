@@ -5,7 +5,8 @@
 
 - assert:
     that:
-      - result | list | difference(["failed_when_result"]) | sort == ["changed", "failed", "msg"]
+      - result.msg == 'ansible.cloud.fail'
+      - not result.changed
 
 - name: fail with additionnal args
   cloud.common.turbo_fail:
