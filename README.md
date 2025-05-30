@@ -23,7 +23,7 @@ For more information about communication, see the [Ansible communication guide](
 
 ## Requirements
 
-- ansible_turbo.module requires Python 3.9 and Ansible 2.15.0 or greater.
+- ansible_turbo.module requires Python 3.9 and Ansible version greater than 2.15.0 and lower than 2.19.
 
 ## Ansible Turbo Module
 
