@@ -16,7 +16,7 @@ This release updates how the async loop is created to support python 3.12+.
 Minor Changes
 -------------
 
-- plugins/module_utils/turbo/server - Update how the async loop is created to support python 3.12+ (https://github.com/ansible-collections/cloud.common/pull/168).
+- plugins/module_utils/turbo/server - Update how the async loop is created to support python 3.12+ (https://github.com/ansible-collections/cloud.common/pull/169).
 
 v4.1.0
 ======
@@ -24,14 +24,14 @@ v4.1.0
 Release Summary
 ---------------
 
-This release adds support to ansible-core 2.19 and bumps the ansible-lint version to 25.1.2
+This release adds support for ``ansible-core`` 2.19 and bumps the ``ansible-lint`` version to 25.1.2
 
 Minor Changes
 -------------
 
-- Bump version of ansible-lint to minimum 25.1.2
-- module_utils/turbo/module - Add support for 2.19 by returning a json compatible arg obj instead of a dict if possible (https://github.com/ansible-collections/cloud.common/pull/167).
-- module_utils/turbo/server - Add support for 2.19 by making FakeStdin implement the IOBase ABC (https://github.com/ansible-collections/cloud.common/pull/167).
+- Bump version of ``ansible-lint`` to minimum 25.1.2
+- module_utils/turbo/module - Add support for 2.19 by returning a JSON-compatible ``arg`` object instead of a ``dict`` if possible (https://github.com/ansible-collections/cloud.common/pull/167).
+- module_utils/turbo/server - Add support for 2.19 by making ``FakeStdin`` implement the ``IOBase`` abstract base class (https://github.com/ansible-collections/cloud.common/pull/167).
 
 v4.0.0
 ======

@@ -202,7 +202,7 @@ releases:
     changes:
       minor_changes:
       - plugins/module_utils/turbo/server - Update how the async loop is created to
-        support python 3.12+ (https://github.com/ansible-collections/cloud.common/pull/168).
+        support python 3.12+ (https://github.com/ansible-collections/cloud.common/pull/169).
       release_summary: This release updates how the async loop is created to support
         python 3.12+.
     fragments:
