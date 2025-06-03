@@ -198,3 +198,14 @@ releases:
     - 170-update-ansible-lint-version.yml
     - 4.1.0.yml
     release_date: '2025-05-15'
+  4.2.0:
+    changes:
+      minor_changes:
+      - plugins/module_utils/turbo/server - Update how the async loop is created to
+        support python 3.12+ (https://github.com/ansible-collections/cloud.common/pull/169).
+      release_summary: This release updates how the async loop is created to support
+        python 3.12+.
+    fragments:
+    - 168-python-312-async-support.yml
+    - 4.2.0.yml
+    release_date: '2025-06-02'
