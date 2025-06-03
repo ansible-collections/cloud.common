@@ -1,0 +1,61 @@
+---
+name: Integration tests (cloud.common)
+on:
+  pull_request:
+    branches:
+      - main
+      - stable-*
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      source: "./cloud_common"
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible-version:
+          - stable-2.18
+          - stable-2.17
+        python-version:
+          - "3.12"
+          - "3.11"
+          - "3.10"
+        exclude:
+          - ansible-version: stable-2.18
+            python-version: 3.10
+    name: "integration-${{ matrix.python-version }}-${{ matrix.ansible-version }}"
+    steps:
+      - name: Checkout cloud.common repository
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.source }}
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # install ansible
+      - name: Install ansible-core (${{ matrix.ansible-version }})
+        run: >-
+          python3 -m pip install
+          https://github.com/ansible/ansible/archive/${{ matrix.ansible-version }}.tar.gz
+          --disable-pip-version-check
+        shell: bash
+
+      - name: install cloud.common collection
+        id: install-cloud-common
+        uses: ansible-network/github_actions/.github/actions/build_install_collection@main
+        with:
+          install_python_dependencies: true
+          source_path: ${{ env.source }}
+
+      - name: Run integration tests
+        uses: ansible-network/github_actions/.github/actions/ansible_test_integration@main
+        with:
+          collection_path: ${{ steps.install-cloud-common.outputs.collection_path }}
+          python_version: ${{ matrix.python-version }}
+          ansible_version: ${{ matrix.ansible-version }}
