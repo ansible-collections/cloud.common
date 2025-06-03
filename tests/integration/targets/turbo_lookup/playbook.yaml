@@ -46,7 +46,8 @@
 
 - hosts: localhost
   gather_facts: false
-
+  environment:
+    ANSIBLE_TURBO_LOOKUP_TTL: 5
   vars:
     turbo_play_var: "simple ansible playbook variable"
 
@@ -79,3 +80,41 @@
         - '["2.9", "2.10"] in var0'
         - '["2.9", "2.10"] in var1'
         - '["2.9", "2.10"] in var2'
+
+    - name: Wait for the socket to be closed
+      pause:
+        seconds: 5
+
+
+- hosts: localhost
+  gather_facts: false
+  vars:
+    env:
+      ANSIBLE_TURBO_LOOKUP_TTL: 1
+      ANOTHER_ANSIBLE_VARS: 10
+  tasks:
+    - name: test environment passed in as template
+      set_fact:
+        var00: "{{ lookup('cloud.common.turbo_demo', wantlist=True) }}"
+      environment: "{{ env }}"
+
+    - name: test inline environment
+      set_fact:
+        var00: "{{ lookup('cloud.common.turbo_demo', wantlist=True) }}"
+      environment:
+        ANSIBLE_TURBO_LOOKUP_TTL: 1
+        ANOTHER_ANSIBLE_VARS: 10
+
+    - name: test environment passed in as string (should fail)
+      set_fact:
+        var00: "{{ lookup('cloud.common.turbo_demo', wantlist=True) }}"
+      environment: blah
+      ignore_errors: true
+      register: _bad_env
+
+    - name: check error message
+      ansible.builtin.assert:
+        that:
+          - expected_msg in _bad_env.msg
+      vars:
+        expected_msg: "'AnsibleUnicode' object has no attribute 'get'"
