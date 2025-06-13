@@ -102,18 +102,18 @@ def prepare_args(argument_specs, params):
 
 
 def json_encode_args(args):
+    encoder = None
     try:
         from ansible.module_utils.common import json as _common_json
 
         encoder = _common_json.get_module_encoder(
             "legacy", _common_json.Direction.CONTROLLER_TO_MODULE
         )
-        args = json.dumps(args, cls=encoder).encode()
     except AttributeError:
         # pre ansible-core 2.19, get_module_encoder does not exist
         pass
 
-    return args
+    return json.dumps(args, cls=encoder).encode()
 
 
 class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
