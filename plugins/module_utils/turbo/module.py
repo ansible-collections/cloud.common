@@ -28,7 +28,6 @@
 import json
 import os
 import os.path
-import pickle
 import sys
 import tempfile
 
