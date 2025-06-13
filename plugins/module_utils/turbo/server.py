@@ -190,7 +190,7 @@ class EmbeddedModule:
         # really safe, and in the future, this will prevent us to run several
         # modules in parallel. We can maybe use a scoped monkeypatch instead
         _fake_stdin = FakeStdin()
-        _fake_stdin.buffer = io.BytesIO(self.params.encode())
+        _fake_stdin.buffer = io.BytesIO(self.params)
         sys.stdin = _fake_stdin
         # Trick to be sure ansible.module_utils.basic._load_params() won't
         # try to build the module parameters from the daemon arguments
@@ -280,7 +280,7 @@ async def run_as_module(content, debug_mode):
             ansiblez_path,
             params,
             env,
-        ) = json.loads(content)
+        ) = content
         if debug_mode:
             print(  # pylint: disable=ansible-bad-function
                 f"-----\nrunning {ansiblez_path} with params: ¨{params}¨"
