@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - Fix issues occurring when running turbo mode with ``ansible-core 2.19`` (https://github.com/ansible-collections/cloud.common/pull/184).

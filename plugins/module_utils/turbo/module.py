@@ -28,6 +28,7 @@
 import json
 import os
 import os.path
+import pickle
 import sys
 import tempfile
 
@@ -98,6 +99,10 @@ def prepare_args(argument_specs, params):
             new_params[k] = v
 
     args = {"ANSIBLE_MODULE_ARGS": new_params}
+    return args
+
+
+def json_encode_args(args):
     try:
         from ansible.module_utils.common import json as _common_json
 
@@ -157,11 +162,10 @@ class AnsibleTurboModule(ansible.module_utils.basic.AnsibleModule):
             args = self.init_args()
             data = [
                 ansiblez_path,
-                json.dumps(args),
+                json_encode_args(args),
                 dict(os.environ),
             ]
-            content = json.dumps(data).encode()
-            result = turbo_socket.communicate(content)
+            result = turbo_socket.communicate(data)
         self.exit_json(**result)
 
     def exit_json(self, **kwargs):
