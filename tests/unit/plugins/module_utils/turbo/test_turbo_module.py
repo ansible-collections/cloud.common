@@ -3,13 +3,13 @@
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import json
 import os
 import socket
 import subprocess
 import sys
 import time
 from pathlib import Path
-import json
 
 # py38 only, See: https://github.com/PyCQA/pylint/issues/2976
 from unittest.mock import ANY, Mock  # pylint: disable=syntax-error
