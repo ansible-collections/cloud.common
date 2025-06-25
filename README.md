@@ -173,7 +173,7 @@ In this demo, we run one playbook that do several `os_keypair` calls. For the fi
 
 ## Testing
 
-This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/ansible-collections/cloud.common/blob/stable-5/CI.md).
+This collection is tested using GitHub Actions. To know more about CI, refer to [CI.md](https://github.com/ansible-collections/cloud.common/blob/main/CI.md).
 
 ## Versioning
 
@@ -199,7 +199,7 @@ If you encounter issues or have questions, you can submit a support request thro
 
 ## Release notes
 
-See [CHANGELOG.rst](https://github.com/ansible-collections/cloud.common/blob/stable-5/CHANGELOG.rst).
+See [CHANGELOG.rst](https://github.com/ansible-collections/cloud.common/blob/main/CHANGELOG.rst).
 
 ## Code of Conduct
 
