@@ -4,6 +4,23 @@ cloud.common Release Notes
 
 .. contents:: Topics
 
+v5.0.0
+======
+
+Release Summary
+---------------
+
+This release drops support for ``ansible-core>=2.19`` and bumps version of ansible-lint to minimum ``24.7.0``.
+
+Minor Changes
+-------------
+
+- Bump version of ansible-lint to minimum 24.7.0 (https://github.com/ansible-collections/cloud.common/pull/159).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Remove support for ansible versions greater than ``2.19`` (https://github.com/ansible-collections/cloud.common/pull/183).
 
 v4.2.0
 ======
@@ -207,3 +224,4 @@ Bugfixes
 
 v1.0.2
 ======
+
