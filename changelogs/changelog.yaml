@@ -209,3 +209,18 @@ releases:
     - 168-python-312-async-support.yml
     - 4.2.0.yml
     release_date: '2025-06-02'
+  5.0.0:
+    changes:
+      breaking_changes:
+      - Remove support for ansible versions greater than ``2.19`` (https://github.com/ansible-collections/cloud.common/pull/183).
+      minor_changes:
+      - Bump version of ansible-lint to minimum 24.7.0 (https://github.com/ansible-collections/cloud.common/pull/159).
+      release_summary: This release drops support for ``ansible-core>=2.19`` and bumps
+        version of ansible-lint to minimum ``24.7.0``.
+    fragments:
+    - 0-readme.yml
+    - 159-bump-ansible-lint-version.yml
+    - 183-update-supported-ansible-versions.yml
+    - readme_template_update.yml
+    - release_summary.yml
+    release_date: '2025-06-24'
