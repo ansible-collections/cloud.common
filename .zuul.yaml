@@ -1,0 +1,9 @@
+- project:
+    check:
+      jobs:
+        - tox-linters
+        - build-ansible-collection
+    gate:
+      jobs:
+        - tox-linters
+        - build-ansible-collection
