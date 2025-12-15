@@ -12,6 +12,7 @@ jobs:
   add_label:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       pull-requests: write
     steps:
       - name: Add 'needs_triage' label if the pr is not a draft
