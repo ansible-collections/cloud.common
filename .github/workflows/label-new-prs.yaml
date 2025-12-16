@@ -1,7 +1,7 @@
 ---
 name: label new prs
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - reopened
@@ -12,7 +12,6 @@ jobs:
   add_label:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       pull-requests: write
     steps:
       - name: Add 'needs_triage' label if the pr is not a draft
