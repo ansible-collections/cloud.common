@@ -1,12 +1,31 @@
-# CI
+# Continuous Integration (CI)
 
-##  cloud.common Collection
+## Cloud Common Collection Testing
 
-GitHub Actions are used to run the Continuous Integration for ansible-collections/cloud.common collection. The workflows used for the CI can be found [here](https://github.com/ansible-collections/cloud.common/tree/main/.github/workflows). These workflows include jobs to run the unit tests, sanity tests, linters and changelog check. The following table lists the python and ansible versions against which these jobs are run.
+GitHub Actions are used to run the CI for the cloud.common collection. The workflows used for the CI can be found in the [.github/workflows](.github/workflows) directory.
 
-| Jobs | Description | Python Versions | Ansible Versions |
-| ------ |-------| ------ | -----------|
-| changelog |Checks for the presence of Changelog fragments | 3.9 | devel |
-| Linters | Runs `black` and `flake8` on plugins and tests | 3.9 | devel |
-| Unit tests | Executes the unit test cases | 3.6, 3.7, 3.9, 3.10 | Stable-2.9 (py 3.6, 3.7), Stable-2.12+ (py 3.8+)|
-| Sanity | Runs ansible sanity checks | 3.6, 3.7, 3.8, 3.9, 3.10, 3.11 | Stable-2.9 (3.6, 3.7), Stable-2.12, 2.13, 2.14 (not on py 3.11), Stable-2.15+ (not on 3.8) |
+### PR Testing Workflows
+
+The following tests run on every pull request:
+
+| Job | Description | Python Versions | ansible-core Versions |
+| --- | ----------- | --------------- | --------------------- |
+| [Changelog](.github/workflows/changelog.yaml) | Checks for the presence of changelog fragments | 3.12 | devel |
+| [Linters](.github/workflows/linters.yaml) | Runs `black`, `flake8`, `isort`, and `flynt` on plugins and tests | 3.10 | devel |
+| [Sanity](.github/workflows/sanity-tests.yaml) | Runs ansible sanity checks | See compatibility table below | devel, stable-2.16, stable-2.17, stable-2.18, stable-2.20 |
+| [Unit tests](.github/workflows/unit-tests.yaml) | Executes unit test cases | See compatibility table below | devel, stable-2.16, stable-2.17, stable-2.18, stable-2.20 |
+| [Integration](.github/workflows/integration-tests.yaml) | Executes integration test suites for turbo module functionality | 3.10, 3.11, 3.12 | stable-2.17, stable-2.18 |
+
+**Note:** Integration tests validate the turbo module daemon and standalone execution modes.
+
+### Python Version Compatibility by ansible-core Version
+
+These are outlined in the collection's [tox.ini](tox.ini) file (`envlist`) and GitHub Actions workflow exclusions.
+
+| ansible-core Version | Sanity Tests | Unit Tests |
+| -------------------- | ------------ | ---------- |
+| devel | 3.12, 3.13 | 3.12, 3.13 |
+| stable-2.20 | 3.12, 3.13, 3.14 | 3.12, 3.13 |
+| stable-2.18 | 3.11, 3.12, 3.13 | 3.11, 3.12, 3.13 |
+| stable-2.17 | 3.10, 3.11, 3.12 | 3.10, 3.11, 3.12 |
+| stable-2.16 | 3.10, 3.11 | 3.10, 3.11 |
