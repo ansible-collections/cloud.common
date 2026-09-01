@@ -1,3 +1,7 @@
 coverage==4.5.4
 pytest-xdist
-pytest-ansible
+# 26.x of pytest-ansible and ansible-compat both require ansible-core!=2.17.*,
+# which would upgrade the branch-pinned ansible-core past the version under test.
+# Pin to <26 so the ansible-core installed for each CI job is left untouched.
+pytest-ansible<26
+ansible-compat<26
