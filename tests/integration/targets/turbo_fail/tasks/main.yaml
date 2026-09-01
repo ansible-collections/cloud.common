@@ -5,7 +5,7 @@
 
 - assert:
     that:
-      - result | list | difference(["failed_when_result"]) | sort == ["changed", "failed", "msg"]
+      - result | list | difference(["failed_when_result", "failed_when_suppressed_exception"]) | sort == ["changed", "failed", "msg"]
 
 - name: fail with additionnal args
   cloud.common.turbo_fail:
