@@ -57,13 +57,22 @@ jobs:
           - milestone
           - stable-2.17
         python-version:
+          - "3.13"
           - "3.12"
           - "3.11"
           - "3.10"
         workflow-id: ${{ fromJson(needs.splitter.outputs.test_jobs) }}
         exclude:
+          # milestone tracks the next ansible-core, which requires Python >=3.13
           - ansible-version: milestone
-            python-version: 3.10
+            python-version: "3.10"
+          - ansible-version: milestone
+            python-version: "3.11"
+          - ansible-version: milestone
+            python-version: "3.12"
+          # stable-2.17 supports Python <=3.12
+          - ansible-version: stable-2.17
+            python-version: "3.13"
     name: "integration-${{ matrix.python-version }}-${{ matrix.ansible-version }}-${{ matrix.workflow-id }}"
     steps:
       - name: Read target
