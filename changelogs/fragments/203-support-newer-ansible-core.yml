@@ -1,0 +1,7 @@
+---
+minor_changes:
+  - Add support for ansible-core 2.19, 2.20, and 2.21
+    (https://github.com/ansible-collections/cloud.common/pull/203).
+breaking_changes:
+  - Drop support for ansible-core 2.15. The collection now requires ansible-core 2.16 or later
+    (https://github.com/ansible-collections/cloud.common/pull/203).
